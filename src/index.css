@@ -8,8 +8,10 @@
 body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:linear-gradient(180deg,#eafaf0 0%, #f7fff8 40%);color:#0f172a}
 .login-page{display:grid;grid-template-columns:1fr 420px;min-height:100vh}
 .hero{background:linear-gradient(180deg,var(--green-1),var(--green-2));color:#fff;padding:48px 64px;display:flex;align-items:center}
-.hero-content h1{font-size:36px;margin:0 0 8px;color: var(--green-1);}
-.hero-content p{margin:0;color:var(--green-2)}
+.hero-content{max-width:640px;margin-top:40px}
+.hero-content img{display:block;margin-bottom:18px}
+.hero-content h1{font-size:44px;margin:0 0 12px;color: var(--green-1);line-height:1.05}
+.hero-content p{margin:0;color:var(--green-2);font-size:16px}
 .login-card{background:var(--card);padding:32px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.12);margin:48px;align-self:center}
 .login-card h2{margin:0 0 16px}
 form{display:flex;flex-direction:column;gap:12px}
@@ -26,6 +28,9 @@ input[type=email],input[type=password]{padding:12px;border-radius:8px;border:1px
 @media(max-width:900px){
   .login-page{grid-template-columns:1fr;}
   .hero{padding:32px;text-align:center}
+  .hero-content{margin-top:20px;align-items:center;display:flex;flex-direction:column}
+  .hero-content h1{font-size:32px;text-align:center}
+  .hero-content img{width:120px;margin-bottom:12px}
   .login-card{margin:24px}
 }
 /* Pequeño detalle visual tipo césped con rayas usando background */
