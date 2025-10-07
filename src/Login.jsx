@@ -45,7 +45,10 @@ export default function Login(){
       </section>
 
       <section className="login-card" aria-labelledby="login-title">
-        <h2 id="login-title">Iniciar sesión</h2>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
+          <img src="/LogoGolReserve.png" alt="GolReserve logo" style={{width:100,height:'auto'}} />
+          <h2 id="login-title">Iniciar sesión</h2>
+        </div>
 
         <form onSubmit={handleSubmit} noValidate>
           <label htmlFor="email">Correo electrónico</label>
