@@ -1,0 +1,32 @@
+:root{
+  --green-1:#0b6b2d;
+  --green-2:#13a844;
+  --card:#ffffff;
+  --muted:#6b7280;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:linear-gradient(180deg,#eafaf0 0%, #f7fff8 40%);color:#0f172a}
+.login-page{display:grid;grid-template-columns:1fr 420px;min-height:100vh}
+.hero{background:linear-gradient(180deg,var(--green-1),var(--green-2));color:#fff;padding:48px 64px;display:flex;align-items:center}
+.hero-content h1{font-size:36px;margin:0 0 8px;color: var(--green-1);}
+.hero-content p{margin:0;color:var(--green-2)}
+.login-card{background:var(--card);padding:32px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.12);margin:48px;align-self:center}
+.login-card h2{margin:0 0 16px}
+form{display:flex;flex-direction:column;gap:12px}
+label{font-size:14px;color:var(--muted)}
+input[type=email],input[type=password]{padding:12px;border-radius:8px;border:1px solid #e6e9ee;font-size:15px}
+.row{display:flex;justify-content:space-between;align-items:center}
+.checkbox{display:flex;align-items:center;gap:8px;font-size:14px}
+.help-link{font-size:13px;color:var(--green-1);text-decoration:none}
+.btn{background:linear-gradient(90deg,var(--green-1),var(--green-2));color:#fff;padding:12px;border-radius:10px;border:0;font-weight:600;cursor:pointer;margin-top:6px}
+.btn:hover{filter:brightness(.98)}
+.error{color:#b91c1c;font-size:14px;min-height:20px}
+.register{font-size:14px;color:var(--muted);margin-top:8px}
+.register a{color:var(--green-1);text-decoration:none}
+@media(max-width:900px){
+  .login-page{grid-template-columns:1fr;}
+  .hero{padding:32px;text-align:center}
+  .login-card{margin:24px}
+}
+/* Pequeño detalle visual tipo césped con rayas usando background */
+.hero{background-image:repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 6px, transparent 6px 12px);} 

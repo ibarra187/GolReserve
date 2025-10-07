@@ -1,0 +1,97 @@
+import React, { useState } from 'react'
+
+export default function Login(){
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [remember, setRemember] = useState(false)
+  const [message, setMessage] = useState('')
+  const [isError, setIsError] = useState(true)
+
+  function handleSubmit(e){
+    e.preventDefault()
+    setMessage('')
+
+    if(!email.trim() || !password.trim()){
+      setIsError(true)
+      setMessage('Completa todos los campos.')
+      return
+    }
+
+    if(password.length < 6){
+      setIsError(true)
+      setMessage('La contraseña debe tener al menos 6 caracteres.')
+      return
+    }
+
+    if(email === 'test@demo.com' && password === 'password'){
+      setIsError(false)
+      setMessage('Inicio de sesión exitoso. Redirigiendo...')
+      setTimeout(()=>{
+        window.location.href = '#'
+      },800)
+    } else {
+      setIsError(true)
+      setMessage('Correo o contraseña incorrectos.')
+    }
+  }
+
+  return (
+    <main className="login-page">
+      <section className="hero">
+        <div className="hero-content">
+          <h1>Alquila tu cancha sintética</h1>
+          <p>Reserva rápido, paga seguro y juega cuando quieras.</p>
+        </div>
+      </section>
+
+      <section className="login-card" aria-labelledby="login-title">
+        <h2 id="login-title">Iniciar sesión</h2>
+
+        <form onSubmit={handleSubmit} noValidate>
+          <label htmlFor="email">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="tucorreo@ejemplo.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
+
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="********"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+            minLength={6}
+          />
+
+          <div className="row">
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                id="remember"
+                name="remember"
+                checked={remember}
+                onChange={e => setRemember(e.target.checked)}
+              />
+              <span>Recordarme</span>
+            </label>
+            <a className="help-link" href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <div id="error" className="error" role="alert" aria-live="polite" style={{color: isError ? '#b91c1c' : 'green'}}>{message}</div>
+
+          <button type="submit" className="btn">Entrar</button>
+
+          <p className="register">¿No tienes cuenta? <a href="#">Regístrate</a></p>
+        </form>
+      </section>
+    </main>
+  )
+}
