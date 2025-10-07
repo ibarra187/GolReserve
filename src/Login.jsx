@@ -38,17 +38,15 @@ export default function Login(){
   return (
     <main className="login-page">
       <section className="hero">
-        <div className="hero-content">
+        <div className="hero-content" style={{display:'flex',flexDirection:'column',alignItems:'flex-start',gap:12}}>
+          <img src="/LogoGolReserve.png" alt="GolReserve logo" style={{width:140,height:'auto'}} />
           <h1>Alquila tu cancha sintética</h1>
           <p>Reserva rápido, paga seguro y juega cuando quieras.</p>
         </div>
       </section>
 
       <section className="login-card" aria-labelledby="login-title">
-        <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
-          <img src="/LogoGolReserve.png" alt="GolReserve logo" style={{width:100,height:'auto'}} />
-          <h2 id="login-title">Iniciar sesión</h2>
-        </div>
+        <h2 id="login-title">Iniciar sesión</h2>
 
         <form onSubmit={handleSubmit} noValidate>
           <label htmlFor="email">Correo electrónico</label>
