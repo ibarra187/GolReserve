@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 export default function Register(){
   const [formData, setFormData] = useState({
     nombre: '',
-    apellido: '',
+    cedula: '',
     telefono: '',
     correo: '',
     password: '',
@@ -26,7 +26,7 @@ export default function Register(){
     setMessage('')
 
     // Validaciones
-    if(!formData.nombre.trim() || !formData.apellido.trim() || !formData.telefono.trim() || !formData.correo.trim() || !formData.password.trim() || !formData.confirmPassword.trim()){
+    if(!formData.nombre.trim() || !formData.cedula.trim() || !formData.telefono.trim() || !formData.correo.trim() || !formData.password.trim() || !formData.confirmPassword.trim()){
       setIsError(true)
       setMessage('Completa todos los campos.')
       return
@@ -48,6 +48,13 @@ export default function Register(){
     if(!emailRegex.test(formData.correo)){
       setIsError(true)
       setMessage('Ingresa un correo electrónico válido.')
+      return
+    }
+
+    const cedulaRegex = /^\d{6,15}$/
+    if(!cedulaRegex.test(formData.cedula.replace(/\s/g, ''))){
+      setIsError(true)
+      setMessage('Ingresa una cédula válida (6-15 dígitos).')
       return
     }
 
@@ -90,32 +97,27 @@ export default function Register(){
         <h2 id="register-title">Crear cuenta</h2>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="row" style={{display:'flex',gap:'12px'}}>
-            <div style={{flex:1}}>
-              <label htmlFor="nombre">Nombre</label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                placeholder="Tu nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div style={{flex:1}}>
-              <label htmlFor="apellido">Apellido</label>
-              <input
-                type="text"
-                id="apellido"
-                name="apellido"
-                placeholder="Tu apellido"
-                value={formData.apellido}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
+          <label htmlFor="nombre">Nombre completo</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            placeholder="Tu nombre completo"
+            value={formData.nombre}
+            onChange={handleChange}
+            required
+          />
+
+          <label htmlFor="cedula">Cédula</label>
+          <input
+            type="text"
+            id="cedula"
+            name="cedula"
+            placeholder="12345678"
+            value={formData.cedula}
+            onChange={handleChange}
+            required
+          />
 
           <label htmlFor="telefono">Teléfono</label>
           <input
