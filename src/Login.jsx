@@ -39,7 +39,7 @@ export default function Login(){
     <main className="login-page">
       <section className="hero">
         <div className="hero-content" style={{display:'flex',flexDirection:'column',alignItems:'flex-start',gap:12}}>
-          <img src="/LogoGolReserve.png" alt="GolReserve logo" style={{width:140,height:'auto'}} />
+          <img src="/LogoGolReserve.png" alt="GolReserve logo" style={{width:450,height:'auto'}} />
           <h1>Alquila tu cancha sintética</h1>
           <p>Reserva rápido, paga seguro y juega cuando quieras.</p>
         </div>
