@@ -90,7 +90,7 @@ export default function Login(){
 
           <button type="submit" className="btn">Entrar</button>
 
-          <p className="register">¿No tienes cuenta? <a href="#">Regístrate</a></p>
+          <p className="register">¿No tienes cuenta? <button type="button" onClick={() => window.location.href = '#register'} style={{background:'none',border:'none',color:'#3b82f6',cursor:'pointer',textDecoration:'underline'}}>Regístrate</button></p>
         </form>
       </section>
     </main>
