@@ -12,6 +12,7 @@ export default function Register(){
   })
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(true)
+  const [showTerms, setShowTerms] = useState(false)
 
   function handleChange(e){
     const { name, value, type, checked } = e.target
@@ -81,6 +82,15 @@ export default function Register(){
 
   function handleBackToLogin(){
     window.location.href = '#login'
+  }
+
+  function handleShowTerms(e){
+    e.preventDefault()
+    setShowTerms(true)
+  }
+
+  function handleCloseTerms(){
+    setShowTerms(false)
   }
 
   return (
@@ -175,7 +185,7 @@ export default function Register(){
                 onChange={handleChange}
                 required
               />
-              <span>Acepto los <a href="#" style={{color:'#3b82f6'}}>términos y condiciones</a></span>
+              <span>Acepto los <a href="#" onClick={handleShowTerms} style={{color:'#3b82f6'}}>términos y condiciones</a></span>
             </label>
           </div>
 
@@ -186,6 +196,41 @@ export default function Register(){
           <p className="register">¿Ya tienes cuenta? <button type="button" onClick={handleBackToLogin} style={{background:'none',border:'none',color:'#3b82f6',cursor:'pointer',textDecoration:'underline'}}>Inicia sesión</button></p>
         </form>
       </section>
+
+      {/* Modal de Términos y Condiciones */}
+      {showTerms && (
+        <div className="modal-overlay" onClick={handleCloseTerms}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Términos y Condiciones</h2>
+              <button className="modal-close" onClick={handleCloseTerms}>&times;</button>
+            </div>
+            <div className="modal-body">
+              <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+              
+              <h3>1. Uso del Servicio</h3>
+              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              
+              <h3>2. Reservas y Pagos</h3>
+              <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+              
+              <h3>3. Cancelaciones</h3>
+              <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+              
+              <h3>4. Responsabilidades</h3>
+              <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+              
+              <h3>5. Privacidad</h3>
+              <p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.</p>
+              
+              <p><strong>Fecha de última actualización:</strong> Octubre 2025</p>
+            </div>
+            <div className="modal-footer">
+              <button className="btn" onClick={handleCloseTerms}>Cerrar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
