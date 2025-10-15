@@ -8,8 +8,8 @@
 body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:linear-gradient(180deg,#eafaf0 0%, #f7fff8 40%);color:#0f172a}
 .login-page{display:grid;grid-template-columns:420px 1fr;min-height:100vh;max-width:1200px;margin:0 auto;gap:48px;align-items:center}
 .hero{background:linear-gradient(180deg,var(--green-1),var(--green-2));color:#fff;padding:48px 64px;display:flex;align-items:center;justify-content:flex-start}
-.hero-content{max-width:640px;margin-top:0px}
-.hero-content img{display:block;margin-bottom:10px}
+.hero-content{max-width:640px;margin-top:-160px;display:flex;flex-direction:column;align-items:flex-start}
+.hero-content img{display:block;margin-bottom:-70px;margin-left:-36px;align-self:flex-start}
 .hero-content h1{font-size:44px;margin:0 0 12px;color: var(--green-1);line-height:1.05}
 .hero-content p{margin:0;color:var(--green-2);font-size:16px}
 .login-card{background:var(--card);padding:32px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.12);margin:48px 0;align-self:center;justify-self:center}
@@ -17,9 +17,9 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:line
 form{display:flex;flex-direction:column;gap:12px}
 label{font-size:14px;color:var(--muted)}
 input[type=email],input[type=password],input[type=text],input[type=tel]{padding:12px;border-radius:8px;border:1px solid #e6e9ee;font-size:15px}
-.row{display:flex;justify-content:space-between;align-items:center}
+.row{display:flex;flex-direction:column;align-items:flex-start;gap:15px}
 .checkbox{display:flex;align-items:center;gap:8px;font-size:14px}
-.help-link{font-size:13px;color:var(--green-1);text-decoration:none}
+.help-link{font-size:12px;color:var(--green-1);text-decoration:none}
 .btn{background:linear-gradient(90deg,var(--green-1),var(--green-2));color:#fff;padding:12px;border-radius:10px;border:0;font-weight:600;cursor:pointer;margin-top:6px}
 .btn:hover{filter:brightness(.98)}
 .error{color:#b91c1c;font-size:14px;min-height:20px}
