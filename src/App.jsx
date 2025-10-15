@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import Login from './Login'
 import Register from './register'
+import Home from './Home'
 
 export default function App(){
-  const [currentPage, setCurrentPage] = useState('login')
+  const [currentPage, setCurrentPage] = useState('home')
 
   useEffect(() => {
     function handleHashChange() {
       const hash = window.location.hash.replace('#', '')
       if (hash === 'register') {
         setCurrentPage('register')
-      } else {
+      } else if (hash === 'login') {
         setCurrentPage('login')
+      } else {
+        setCurrentPage('home')
       }
     }
 
@@ -28,5 +31,9 @@ export default function App(){
     return <Register />
   }
   
-  return <Login />
+  if (currentPage === 'login') {
+    return <Login />
+  }
+  
+  return <Home />
 }
