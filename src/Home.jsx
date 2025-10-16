@@ -46,10 +46,8 @@ function Home() {
         </div>
 
         <div className="hero-image">
-          {/* Espacio para imagen del jugador */}
-          <div className="image-placeholder hero-player">
-            <p>Imagen del jugador con balón</p>
-          </div>
+          {/* Imagen del jugador */}
+          <img src="/camiseta.png" alt="Jugador con balón" className="hero-player" />
           
           {/* Widget de pago simulado */}
           <div className="payment-widget">
@@ -169,7 +167,7 @@ function Home() {
               <span className="contact-icon">📍</span>
               <div>
                 <h3>Ubicación</h3>
-                <p>Bogotá, Colombia</p>
+                <p>Tuluá, Colombia</p>
               </div>
             </div>
           </div>

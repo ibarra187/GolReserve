@@ -15,7 +15,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 5%;
+  padding: 1rem 5%;  /* Reducido el padding vertical */
+  min-height: 80px;  /* Altura fija del navbar */
+  max-height: 80px;  /* Evita que crezca */
   background-color: #f5f5f5;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -30,9 +32,10 @@
 }
 
 .logo {
-  width: 100px;
-  height: auto;
-  object-fit: contain;
+  width: auto;  /* El ancho se ajusta automáticamente */
+  height: 150px;  /* Logo más grande - puedes aumentar este valor */
+  max-height: 200px;  /* Limita el crecimiento */
+  object-fit: contain;  /* Mantiene la proporción de la imagen */
 }
 
 .brand-name {
@@ -178,7 +181,8 @@
   width: 500px;
   height: 500px;
   border-radius: 20px;
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  object-fit: cover;  /* La imagen cubre todo el espacio */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);  /* Sombra para darle profundidad */
 }
 
 .payment-widget {
