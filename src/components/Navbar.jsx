@@ -6,7 +6,6 @@ export default function Navbar({ currentPage = 'home' }) {
     <header className="header">
       <div className="logo-container">
         <img src="/LogoGolReserve.png" alt="GolReserve Logo" className="logo" />
-        <span className="brand-name">GolReserve</span>
       </div>
       
       <nav className="nav-menu">
