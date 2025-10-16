@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import Login from './Login'
-import Register from './register'
-import Home from './Home'
+import Login from './pages/Login'
+import Register from './pages/register'
+import Home from './pages/Home'
+import Reservas from './pages/Reservas'
 
 export default function App(){
   const [currentPage, setCurrentPage] = useState('home')
@@ -13,6 +14,8 @@ export default function App(){
         setCurrentPage('register')
       } else if (hash === 'login') {
         setCurrentPage('login')
+      } else if (hash === 'reservas') {
+        setCurrentPage('reservas')
       } else {
         setCurrentPage('home')
       }
@@ -33,6 +36,10 @@ export default function App(){
   
   if (currentPage === 'login') {
     return <Login />
+  }
+  
+  if (currentPage === 'reservas') {
+    return <Reservas />
   }
   
   return <Home />

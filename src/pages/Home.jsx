@@ -1,24 +1,12 @@
 import React from 'react';
-import './Home.css';
+import '../styles/Home.css';
+import Navbar from '../components/Navbar';
 
 function Home() {
   return (
     <div className="home-container">
-      {/* Header con navegación */}
-      <header className="header">
-        <div className="logo-container">
-          <img src="/LogoGolReserve.png" alt="GolReserve Logo" className="logo" />
-        </div>
-        
-        <nav className="nav-menu">
-          <a href="#" className="nav-link">Inicio</a>
-          <a href="#como-funciona" className="nav-link">Como funciona</a>
-          <a href="#reservar" className="nav-link">Reservar</a>
-          <a href="#contacto" className="nav-link">Contacto</a>
-          <a href="#login" className="nav-link">Iniciar sesión</a>
-          <a href="#register" className="btn-register">Registrarse</a>
-        </nav>
-      </header>
+      {/* Navbar reutilizable */}
+      <Navbar currentPage="home" />
 
       {/* Sección Hero */}
       <section id="inicio" className="hero-section">
@@ -36,7 +24,7 @@ function Home() {
           </p>
 
           <div className="hero-buttons">
-            <button className="btn-primary">
+            <button className="btn-primary" onClick={() => window.location.href = '#reservas'}>
               <span className="soccer-icon">⚽</span> Reservar ahora
             </button>
             <button className="btn-secondary">
@@ -119,7 +107,7 @@ function Home() {
             </div>
             <h3>Cancha Premium</h3>
             <p>Césped sintético de alta calidad</p>
-            <button className="btn-reserve">Reservar</button>
+            <button className="btn-reserve" onClick={() => window.location.href = '#reservas'}>Reservar</button>
           </div>
           
           <div className="field-card">
@@ -128,7 +116,7 @@ function Home() {
             </div>
             <h3>Cancha Estándar</h3>
             <p>Césped sintético estándar</p>
-            <button className="btn-reserve">Reservar</button>
+            <button className="btn-reserve" onClick={() => window.location.href = '#reservas'}>Reservar</button>
           </div>
           
           <div className="field-card">
@@ -137,7 +125,7 @@ function Home() {
             </div>
             <h3>Cancha Techada</h3>
             <p>Perfecta para cualquier clima</p>
-            <button className="btn-reserve">Reservar</button>
+            <button className="btn-reserve" onClick={() => window.location.href = '#reservas'}>Reservar</button>
           </div>
         </div>
       </section>

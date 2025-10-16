@@ -1,0 +1,416 @@
+/* Reservas.css */
+
+.reservas-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+/* Navbar */
+.navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  min-height: 80px;  /* Altura fija del navbar */
+  max-height: 80px;  /* Evita que crezca */
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: 100%;  /* Ocupa toda la altura del navbar */
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-logo .logo {
+  height: 60px;  
+  width: auto;
+  max-height: 150px;  /* Limita el crecimiento para que no rompa el navbar */
+  object-fit: contain;  /* Mantiene la proporción de la imagen */
+}
+
+.nav-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4caf50;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.nav-login-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-login-btn:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+/* Contenido principal */
+.reservas-main {
+  padding: 2rem 0;
+}
+
+.reservas-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.reservas-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2d5016;
+  margin-bottom: 3rem;
+  font-weight: 700;
+}
+
+.reservas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Sección del calendario */
+.calendar-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.1);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-nav-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.calendar-nav-btn:hover {
+  background: #45a049;
+  transform: scale(1.1);
+}
+
+.calendar-month {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d5016;
+}
+
+.calendar-grid {
+  width: 100%;
+}
+
+.calendar-days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.calendar-day-name {
+  text-align: center;
+  font-weight: 600;
+  color: #666;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border: none;
+  background: #f8f9fa;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.calendar-day:hover:not(:disabled) {
+  background: rgba(76, 175, 80, 0.1);
+  transform: scale(1.05);
+}
+
+.calendar-day.selected {
+  background: #4caf50;
+  color: white;
+}
+
+.calendar-day.other-month {
+  color: #ccc;
+  background: #f8f9fa;
+}
+
+.calendar-day.past-date {
+  color: #ccc;
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.calendar-day:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Sección de reservas */
+.booking-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.1);
+  height: fit-content;
+}
+
+.booking-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.booking-header h3 {
+  color: #2d5016;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.selected-date {
+  color: #4caf50;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+/* Selector de canchas */
+.court-selector {
+  margin-bottom: 2rem;
+}
+
+.court-selector h4 {
+  color: #2d5016;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.court-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.court-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.court-btn:hover {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.court-btn.selected {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+  color: #2d5016;
+}
+
+.court-price {
+  color: #4caf50;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Selector de horarios */
+.time-selector {
+  margin-bottom: 2rem;
+}
+
+.time-selector h4 {
+  color: #2d5016;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.time-btn {
+  position: relative;
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-align: center;
+}
+
+.time-btn.available:hover {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.time-btn.selected {
+  border-color: #4caf50;
+  background: #4caf50;
+  color: white;
+}
+
+.time-btn.unavailable {
+  background: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  border-color: #ddd;
+}
+
+.unavailable-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff5722;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* Resumen de reserva */
+.booking-summary {
+  background: rgba(76, 175, 80, 0.05);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.booking-summary h4 {
+  color: #2d5016;
+  margin-bottom: 1rem;
+}
+
+.summary-details {
+  margin-bottom: 1.5rem;
+}
+
+.summary-details p {
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.reserve-btn {
+  width: 100%;
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reserve-btn:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reservas-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .nav-menu {
+    display: none;
+  }
+  
+  .reservas-title {
+    font-size: 2rem;
+  }
+  
+  .time-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .court-options {
+    gap: 0.5rem;
+  }
+}

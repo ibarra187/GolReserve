@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Navbar from '../components/Navbar'
 
 export default function Login(){
   const [email, setEmail] = useState('')
@@ -37,18 +38,10 @@ export default function Login(){
 
   return (
     <main className="login-page">
-      {/* Navbar */}
-      <header className="login-navbar">
-        <nav className="navbar-content">
-          <a href="#" className="nav-link">Inicio</a>
-          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }}>Como funciona</a>
-          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }}>Reservar</a>
-          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }}>Contacto</a>
-          <a href="#login" className="nav-link active">Iniciar sesión</a>
-        </nav>
-      </header>
+      {/* Navbar reutilizable */}
+      <Navbar currentPage="login" />
 
-      <section style={{display:'grid', gridTemplateColumns:'420px 1fr', maxWidth:'1200px', margin:'0 auto', gap:'48px', alignItems:'center', minHeight:'calc(100vh - 60px)'}}>
+      <div className="login-content">
         <section className="hero">
           <div className="hero-content" style={{display:'flex',flexDirection:'column',alignItems:'flex-start',gap:12}}>
             <img src="/LogoGolReserve.png" alt="GolReserve logo" style={{width:450,height:'auto'}} />
@@ -104,8 +97,8 @@ export default function Login(){
 
           <p className="register">¿No tienes cuenta? <button type="button" onClick={() => window.location.href = '#register'} style={{background:'none',border:'none',color:'#3b82f6',cursor:'pointer',textDecoration:'underline'}}>Regístrate</button></p>
         </form>
-      </section>
-      </section>
+        </section>
+      </div>
     </main>
   )
 }

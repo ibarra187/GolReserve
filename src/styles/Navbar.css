@@ -1,0 +1,120 @@
+/* Navbar.css - Estilos reutilizables para el navbar */
+
+/* Header y Navegación */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 5%;  /* Padding optimizado */
+  min-height: 80px;  /* Altura fija del navbar */
+  max-height: 80px;  /* Evita que crezca */
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  width: auto;  /* El ancho se ajusta automáticamente */
+  height: 60px;  /* Logo más grande pero que quepa en navbar */
+  max-height: 65px;  /* Limita el crecimiento para que no rompa el navbar */
+  object-fit: contain;  /* Mantiene la proporción de la imagen */
+}
+
+.brand-name {
+  font-size: 1.8rem;
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.nav-link:hover {
+  color: #4CAF50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.nav-link.active {
+  color: #4CAF50;
+  background: rgba(76, 175, 80, 0.15);
+}
+
+.btn-register {
+  background-color: #C9F549;
+  color: #000;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-register:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-register.active {
+  background-color: #B8E540;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.5rem 3%;
+  }
+  
+  .nav-menu {
+    display: none;
+  }
+  
+  .logo {
+    height: 45px;
+    max-height: 50px;
+  }
+  
+  .brand-name {
+    font-size: 1.4rem;
+  }
+  
+  .nav-actions {
+    gap: 0.5rem;
+  }
+  
+  .btn-register {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-actions .nav-link {
+    display: none;
+  }
+}
