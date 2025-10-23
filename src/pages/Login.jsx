@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Navbar from '../components/Navbar'
 
 export default function Login(){
   const [email, setEmail] = useState('')
@@ -37,16 +38,20 @@ export default function Login(){
 
   return (
     <main className="login-page">
-      <section className="hero">
-        <div className="hero-content" style={{display:'flex',flexDirection:'column',alignItems:'flex-start',gap:12}}>
-          <img src="/LogoGolReserve.png" alt="GolReserve logo" style={{width:450,height:'auto'}} />
-          <h1>Alquila tu cancha sintética</h1>
-          <p>Reserva rápido, paga seguro y juega cuando quieras.</p>
-        </div>
-      </section>
+      {/* Navbar reutilizable */}
+      <Navbar currentPage="login" />
 
-      <section className="login-card" aria-labelledby="login-title">
-        <h2 id="login-title">Iniciar sesión</h2>
+      <div className="login-content">
+        <section className="hero">
+          <div className="hero-content" style={{display:'flex',flexDirection:'column',alignItems:'flex-start',gap:12}}>
+            <img src="/LogoGolReserve.png" alt="GolReserve logo" style={{width:450,height:'auto'}} />
+            <h1>Alquila tu cancha sintética</h1>
+            <p>Reserva rápido, paga seguro y juega cuando quieras.</p>
+          </div>
+        </section>
+
+        <section className="login-card" aria-labelledby="login-title">
+          <h2 id="login-title">Iniciar sesión</h2>
 
         <form onSubmit={handleSubmit} noValidate>
           <label htmlFor="email">Correo electrónico</label>
@@ -90,9 +95,10 @@ export default function Login(){
 
           <button type="submit" className="btn">Entrar</button>
 
-          <p className="register">¿No tienes cuenta? <a href="#">Regístrate</a></p>
+          <p className="register">¿No tienes cuenta? <button type="button" onClick={() => window.location.href = '#register'} style={{background:'none',border:'none',color:'#3b82f6',cursor:'pointer',textDecoration:'underline'}}>Regístrate</button></p>
         </form>
-      </section>
+        </section>
+      </div>
     </main>
   )
 }

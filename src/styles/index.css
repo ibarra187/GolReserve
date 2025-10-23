@@ -1,0 +1,207 @@
+:root{
+  --green-1:#0b6b2d;
+  --green-2:#13a844;
+  --card:#ffffff;
+  --muted:#6b7280;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:linear-gradient(180deg,#eafaf0 0%, #f7fff8 40%);color:#0f172a}
+.login-page{min-height:100vh;background:linear-gradient(180deg,#eafaf0 0%, #f7fff8 40%)}
+.login-content{display:grid;grid-template-columns:420px 1fr;max-width:1200px;margin:0 auto;gap:48px;align-items:center;min-height:calc(100vh - 80px)}
+.hero{background:linear-gradient(180deg,var(--green-1),var(--green-2));color:#fff;padding:48px 64px;display:flex;align-items:center;justify-content:flex-start}
+.hero-content{max-width:640px;margin-top:-160px;display:flex;flex-direction:column;align-items:flex-start}
+.hero-content img{display:block;margin-bottom:-70px;margin-left:-36px;align-self:flex-start}
+.hero-content h1{font-size:44px;margin:0 0 12px;color: var(--green-1);line-height:1.05}
+.hero-content p{margin:0;color:var(--green-2);font-size:16px}
+.login-card{background:var(--card);padding:32px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.12);margin:48px 0;align-self:center;justify-self:center}
+.login-card h2{margin:0 0 16px}
+form{display:flex;flex-direction:column;gap:12px}
+label{font-size:14px;color:var(--muted)}
+input[type=email],input[type=password],input[type=text],input[type=tel]{padding:12px;border-radius:8px;border:1px solid #e6e9ee;font-size:15px}
+.row{display:flex;flex-direction:column;align-items:flex-start;gap:15px}
+.checkbox{display:flex;align-items:center;gap:8px;font-size:14px}
+.help-link{font-size:12px;color:var(--green-1);text-decoration:none}
+.btn{background:linear-gradient(90deg,var(--green-1),var(--green-2));color:#fff;padding:12px;border-radius:10px;border:0;font-weight:600;cursor:pointer;margin-top:6px}
+.btn:hover{filter:brightness(.98)}
+.error{color:#b91c1c;font-size:14px;min-height:20px}
+.register{font-size:14px;color:var(--muted);margin-top:8px}
+.register a{color:var(--green-1);text-decoration:none}
+@media(max-width:900px){
+  .login-content{grid-template-columns:1fr;}
+  .hero{padding:32px;text-align:center}
+  .hero-content{margin-top:12px;align-items:center;display:flex;flex-direction:column}
+  .hero-content h1{font-size:32px;text-align:center}
+  .hero-content img{width:120px;margin-bottom:12px}
+  .login-card{margin:24px}
+}
+/* Pequeño detalle visual tipo césped con rayas usando background */
+.hero{background-image:repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 6px, transparent 6px 12px);} 
+
+/* Estilos del Modal */
+.modal-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+
+.modal-content{
+  background:white;
+  border-radius:12px;
+  max-width:600px;
+  width:90%;
+  max-height:80vh;
+  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,0.3);
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:24px;
+  border-bottom:1px solid #e6e9ee;
+}
+
+.modal-header h2{
+  margin:0;
+  color:var(--green-1);
+  font-size:24px;
+}
+
+.modal-close{
+  background:none;
+  border:none;
+  font-size:28px;
+  cursor:pointer;
+  color:var(--muted);
+  padding:0;
+  width:32px;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-close:hover{
+  color:#000;
+}
+
+.modal-body{
+  padding:24px;
+  overflow-y:auto;
+  max-height:50vh;
+  line-height:1.6;
+}
+
+.modal-body h3{
+  color:var(--green-1);
+  margin:20px 0 10px 0;
+  font-size:18px;
+}
+
+.modal-body p{
+  margin:0 0 16px 0;
+  color:#374151;
+}
+
+.modal-footer{
+  padding:20px 24px;
+  border-top:1px solid #e6e9ee;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.modal-footer .btn{
+  margin-top:0;
+}
+
+/* Navbar del Login - OBSOLETO: Ahora se usa componente Navbar reutilizable */
+/*
+.login-navbar {
+  background-color: #f5f5f5;
+  padding: 1rem 5%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar-content .nav-link {
+  text-decoration: none;
+  color: #9ca3af;
+  font-weight: 500;
+  font-size: 14px;
+  transition: color 0.3s;
+  padding: 0.5rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar-content .nav-link:hover {
+  color: #4b5563;
+}
+
+.navbar-content .nav-link.active {
+  color: #000;
+  font-weight: 600;
+}
+*/
+
+/* Ajustar el layout de login-page para incluir navbar */
+.login-page {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(180deg,#eafaf0 0%, #f7fff8 40%);
+}
+
+.login-page > .hero,
+.login-page > .login-card {
+  margin: 0;
+}
+
+.login-page > section {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 48px;
+  align-items: center;
+  min-height: calc(100vh - 60px);
+}
+
+@media(max-width:900px){
+  /* Navbar styles moved to Navbar.css */
+  /*
+  .navbar-content {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .navbar-content .nav-link {
+    font-size: 13px;
+  }
+  */
+  
+  .login-page > section {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
