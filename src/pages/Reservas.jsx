@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Reservas.css';
-import Navbar from '../components/Navbar';
+import '../styles/reservas.css';
+import Navbar from '../components/navbar';
 
 export default function Reservas() {
   const [selectedDate, setSelectedDate] = useState(new Date());
