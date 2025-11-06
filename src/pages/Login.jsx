@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import Navbar from '../components/Navbar'
+import Navbar from '../components/navbar'
+import { authService } from '../services/authService'
 
 export default function Login(){
   const [email, setEmail] = useState('')
@@ -8,7 +9,7 @@ export default function Login(){
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(true)
 
-  function handleSubmit(e){
+  async function handleSubmit(e){
     e.preventDefault()
     setMessage('')
 
@@ -24,15 +25,20 @@ export default function Login(){
       return
     }
 
-    if(email === 'test@demo.com' && password === 'password'){
+    try {
+      const response = await authService.login(email, password)
       setIsError(false)
       setMessage('Inicio de sesión exitoso. Redirigiendo...')
+      // Redirigir después de un login exitoso
+      setTimeout(() => {
+        window.location.hash = 'home'
+      }, 1500)
+    } catch (error) {
+      setIsError(true)
+      setMessage(error.message || 'Error al iniciar sesión')
       setTimeout(()=>{
         window.location.href = '#'
       },800)
-    } else {
-      setIsError(true)
-      setMessage('Correo o contraseña incorrectos.')
     }
   }
 
