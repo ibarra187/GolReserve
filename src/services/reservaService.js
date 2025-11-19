@@ -12,7 +12,7 @@ export const reservaService = {
 
     createReserva: async (reservaData) => {
         try {
-            const response = await api.post('/reservas', reservaData);
+            const response = await api.post('/reservas/crear', reservaData);
             return response.data;
         } catch (error) {
             throw error.response?.data || { message: 'Error al crear la reserva' };
