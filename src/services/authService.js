@@ -1,4 +1,4 @@
-import api from './api';
+﻿import api from './api';
 import { tokenService } from './tokenService';
 
 export const authService = {
@@ -6,29 +6,31 @@ export const authService = {
         try {
             const response = await api.post('/usuarios/login', { email, password });
             
-            console.log('Respuesta del login:', response.data);
-            
-            // Verificar si el login fue exitoso
-            if (response.data && response.data.mensaje === "Login exitoso") {
-                // Guardar los datos del usuario directamente de la respuesta
+            // Guardar los datos del usuario y el token JWT
+            if (response.data) {
                 const userData = {
                     email: response.data.email,
                     nombre: response.data.nombre,
                     idUsuario: response.data.idUsuario
                 };
                 
-                // Usar el email como token temporal
-                const tempToken = response.data.email;
-                tokenService.setToken(tempToken);
-                tokenService.setUserData(userData);
+                // Si el backend devuelve un token, guardarlo
+                if (response.data.token) {
+                    tokenService.setToken(response.data.token);
+                }
                 
+                tokenService.setUserData(userData);
                 return response.data;
-            } else {
-                throw new Error(response.data?.mensaje || 'Error en el inicio de sesión');
             }
         } catch (error) {
-            console.error('Error completo:', error);
-            throw error.response?.data || { message: 'Error en el servidor' };
+            // Manejar errores de forma clara
+            if (error.response?.status === 401) {
+                throw new Error('Correo o contraseña incorrectos');
+            }
+            if (error.response?.data?.mensaje) {
+                throw new Error(error.response.data.mensaje);
+            }
+            throw new Error(error.response?.data?.message || 'Error al iniciar sesión');
         }
     },
 
