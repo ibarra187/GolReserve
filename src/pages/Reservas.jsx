@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/reservas.css';
 import Navbar from '../components/navbar';
+import { tokenService } from '../services/tokenService';
+import { reservaService } from '../services/reservaService';
 
 export default function Reservas() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedCourt, setSelectedCourt] = useState('futbol5');
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [unavailableTimes, setUnavailableTimes] = useState({});
+  const [loading, setLoading] = useState(false);
 
   // Datos de canchas y horarios
   const courts = {
-    futbol5: { name: 'Fútbol 5', price: 50000 },
-    futbol7: { name: 'Fútbol 7', price: 70000 },
-    futbol11: { name: 'Fútbol 11', price: 100000 }
+    futbol5: { name: 'Fútbol 5', price: 50000, id: 1 },
+    futbol7: { name: 'Fútbol 7', price: 70000, id: 2 },
+    futbol11: { name: 'Fútbol 11', price: 100000, id: 3 }
   };
 
   const timeSlots = [
@@ -20,10 +24,36 @@ export default function Reservas() {
     '21:00', '22:00', '23:00'
   ];
 
-  // Horarios ocupados simulados (en producción vendría de API)
-  const [unavailableTimes] = useState({
-    [selectedDate.toDateString()]: ['16:00', '19:00', '22:00']
-  });
+  // Cargar reservas existentes desde la base de datos
+  useEffect(() => {
+    const loadReservas = async () => {
+      try {
+        setLoading(true);
+        const reservas = await reservaService.getAllReservas();
+        
+        // Organizar horarios ocupados por fecha y cancha
+        const ocupados = {};
+        reservas.forEach(reserva => {
+          const dateKey = new Date(reserva.fechaReserva).toDateString();
+          if (!ocupados[dateKey]) {
+            ocupados[dateKey] = {};
+          }
+          if (!ocupados[dateKey][reserva.idCancha]) {
+            ocupados[dateKey][reserva.idCancha] = [];
+          }
+          ocupados[dateKey][reserva.idCancha].push(reserva.horaInicio);
+        });
+        
+        setUnavailableTimes(ocupados);
+      } catch (error) {
+        console.error('Error al cargar reservas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadReservas();
+  }, []);
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -60,7 +90,8 @@ export default function Reservas() {
 
   const isTimeAvailable = (time) => {
     const dateKey = selectedDate.toDateString();
-    return !unavailableTimes[dateKey]?.includes(time);
+    const courtId = courts[selectedCourt].id;
+    return !unavailableTimes[dateKey]?.[courtId]?.includes(time);
   };
 
   const toggleTimeSelection = (time) => {
@@ -77,21 +108,101 @@ export default function Reservas() {
     return selectedTimes.length * courts[selectedCourt].price;
   };
 
-  const handleReservation = () => {
+  const handleReservation = async () => {
     if (selectedTimes.length === 0) {
       alert('Selecciona al menos un horario');
       return;
     }
     
-    const reservation = {
-      date: selectedDate,
-      court: courts[selectedCourt].name,
-      times: selectedTimes,
-      total: calculateTotal()
-    };
+    // Verificar si el usuario está autenticado
+    if (!tokenService.isAuthenticated()) {
+      alert('Debes iniciar sesión o registrarte para realizar una reserva');
+      window.location.hash = 'register';
+      return;
+    }
     
-    console.log('Reserva:', reservation);
-    alert(`Reserva confirmada para ${courts[selectedCourt].name} el ${formatDate(selectedDate)}`);
+    try {
+      setLoading(true);
+      // Obtener datos del usuario
+      const userData = tokenService.getUserData();
+      
+      console.log('Datos del usuario:', userData);
+      
+      // Crear una reserva por cada horario seleccionado
+      for (const time of selectedTimes) {
+        // Calcular hora de fin (1 hora después)
+        const [hora, minuto] = time.split(':').map(Number);
+        let horaFin = hora + 1;
+        
+        // Si la hora fin es 24, convertir a 00 del día siguiente
+        // Pero para reservas, mejor usar 23:59 como límite
+        if (horaFin === 24) {
+          horaFin = 0;
+        }
+        
+        const horaFinFormateada = `${horaFin.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
+        
+        const reservaData = {
+          idUsuario: userData.idUsuario,
+          idCancha: courts[selectedCourt].id,
+          fechaReserva: selectedDate.toISOString().split('T')[0], // Formato YYYY-MM-DD
+          horaInicio: time,
+          horaFin: horaFinFormateada,
+          estadoReserva: 'CONFIRMADA',
+          valorTotal: courts[selectedCourt].price
+        };
+        
+        console.log('Enviando reserva:', reservaData);
+        await reservaService.createReserva(reservaData);
+      }
+      
+      alert(`¡Reserva confirmada! Se han reservado ${selectedTimes.length} hora(s) para ${courts[selectedCourt].name} el ${formatDate(selectedDate)}`);
+      
+      // Limpiar selección de horarios
+      setSelectedTimes([]);
+      
+      // Recargar reservas para actualizar horarios ocupados
+      const reservas = await reservaService.getAllReservas();
+      const ocupados = {};
+      reservas.forEach(reserva => {
+        const dateKey = new Date(reserva.fechaReserva).toDateString();
+        if (!ocupados[dateKey]) {
+          ocupados[dateKey] = {};
+        }
+        if (!ocupados[dateKey][reserva.idCancha]) {
+          ocupados[dateKey][reserva.idCancha] = [];
+        }
+        ocupados[dateKey][reserva.idCancha].push(reserva.horaInicio);
+      });
+      setUnavailableTimes(ocupados);
+      
+    } catch (error) {
+      console.error('Error completo:', error);
+      console.error('Error response:', error.response);
+      console.error('Error data:', error.response?.data);
+      
+      let errorMessage = '';
+      
+      // Manejo específico para cada tipo de error
+      if (error.response?.status === 409) {
+        // Conflicto - horario ya reservado
+        errorMessage = error.response?.data?.mensaje || 'El horario seleccionado ya está reservado. Por favor, elige otro horario.';
+      } else if (error.response?.data?.mensaje) {
+        errorMessage = error.response.data.mensaje;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.mensaje) {
+        errorMessage = error.mensaje;
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = 'Error al crear la reserva. Por favor, intenta nuevamente.';
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const monthNames = [
@@ -221,8 +332,12 @@ export default function Reservas() {
                     <p><strong>Total:</strong> ${calculateTotal().toLocaleString()}</p>
                   </div>
                   
-                  <button className="reserve-btn" onClick={handleReservation}>
-                    Confirmar Reserva
+                  <button 
+                    className="reserve-btn" 
+                    onClick={handleReservation}
+                    disabled={loading}
+                  >
+                    {loading ? 'Procesando...' : 'Confirmar Reserva'}
                   </button>
                 </div>
               )}
