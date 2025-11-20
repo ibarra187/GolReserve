@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Navbar from '../components/navbar'
+import Navbar from '../components/Navbar'
 import { authService } from '../services/authService'
 
 export default function Register() {

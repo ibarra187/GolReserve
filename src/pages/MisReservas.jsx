@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/MisReservas.css';
-import Navbar from '../components/navbar';
+import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 import { reservaService } from '../services/reservaService';

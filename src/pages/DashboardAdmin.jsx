@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Navbar from '../components/navbar'
+import Navbar from '../components/Navbar'
 import { adminService } from '../services/adminService'
 import '../styles/DashboardAdmin.css'
 

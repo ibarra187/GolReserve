@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/reservas.css';
-import Navbar from '../components/navbar';
+import '../styles/Reservas.css';
+import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 import { tokenService } from '../services/tokenService';
