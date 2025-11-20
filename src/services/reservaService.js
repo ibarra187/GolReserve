@@ -35,5 +35,25 @@ export const reservaService = {
         } catch (error) {
             throw error.response?.data || { message: 'Error al eliminar la reserva' };
         }
+    },
+
+    getReservasByUsuario: async (idUsuario) => {
+        try {
+            const response = await api.get(`/reservas/usuario/${idUsuario}`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Error al obtener las reservas del usuario' };
+        }
+    },
+
+    cancelarReserva: async (idReserva) => {
+        try {
+            const response = await api.put(`/reservas/cancelar/${idReserva}`, {
+                estadoReserva: 'CANCELADA'
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Error al cancelar la reserva' };
+        }
     }
 };
