@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/reservas.css';
 import Navbar from '../components/navbar';
+import Toast from '../components/Toast';
+import { useToast } from '../hooks/useToast';
 import { tokenService } from '../services/tokenService';
 import { reservaService } from '../services/reservaService';
 
@@ -11,6 +13,7 @@ export default function Reservas() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [unavailableTimes, setUnavailableTimes] = useState({});
   const [loading, setLoading] = useState(false);
+  const { toasts, removeToast, success, error, warning, info } = useToast();
 
   // Datos de canchas y horarios
   const courts = {
@@ -45,8 +48,8 @@ export default function Reservas() {
         });
         
         setUnavailableTimes(ocupados);
-      } catch (error) {
-        console.error('Error al cargar reservas:', error);
+      } catch (err) {
+        console.error('Error al cargar reservas:', err);
       } finally {
         setLoading(false);
       }
@@ -110,14 +113,16 @@ export default function Reservas() {
 
   const handleReservation = async () => {
     if (selectedTimes.length === 0) {
-      alert('Selecciona al menos un horario');
+      warning('Selecciona al menos un horario');
       return;
     }
     
     // Verificar si el usuario está autenticado
     if (!tokenService.isAuthenticated()) {
-      alert('Debes iniciar sesión o registrarte para realizar una reserva');
-      window.location.hash = 'register';
+      info('Debes iniciar sesión o registrarte para realizar una reserva');
+      setTimeout(() => {
+        window.location.hash = 'register';
+      }, 1500);
       return;
     }
     
@@ -156,7 +161,7 @@ export default function Reservas() {
         await reservaService.createReserva(reservaData);
       }
       
-      alert(`¡Reserva confirmada! Se han reservado ${selectedTimes.length} hora(s) para ${courts[selectedCourt].name} el ${formatDate(selectedDate)}`);
+      success(`¡Reserva confirmada! Se han reservado ${selectedTimes.length} hora(s) para ${courts[selectedCourt].name} el ${formatDate(selectedDate)}`);
       
       // Limpiar selección de horarios
       setSelectedTimes([]);
@@ -176,30 +181,30 @@ export default function Reservas() {
       });
       setUnavailableTimes(ocupados);
       
-    } catch (error) {
-      console.error('Error completo:', error);
-      console.error('Error response:', error.response);
-      console.error('Error data:', error.response?.data);
+    } catch (err) {
+      console.error('Error completo:', err);
+      console.error('Error response:', err.response);
+      console.error('Error data:', err.response?.data);
       
       let errorMessage = '';
       
       // Manejo específico para cada tipo de error
-      if (error.response?.status === 409) {
+      if (err.response?.status === 409) {
         // Conflicto - horario ya reservado
-        errorMessage = error.response?.data?.mensaje || 'El horario seleccionado ya está reservado. Por favor, elige otro horario.';
-      } else if (error.response?.data?.mensaje) {
-        errorMessage = error.response.data.mensaje;
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.mensaje) {
-        errorMessage = error.mensaje;
-      } else if (error.message) {
-        errorMessage = error.message;
+        errorMessage = err.response?.data?.mensaje || 'El horario seleccionado ya está reservado. Por favor, elige otro horario.';
+      } else if (err.response?.data?.mensaje) {
+        errorMessage = err.response.data.mensaje;
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.mensaje) {
+        errorMessage = err.mensaje;
+      } else if (err.message) {
+        errorMessage = err.message;
       } else {
         errorMessage = 'Error al crear la reserva. Por favor, intenta nuevamente.';
       }
       
-      alert(errorMessage);
+      error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -216,6 +221,19 @@ export default function Reservas() {
     <div className="reservas-container">
       {/* Navbar reutilizable */}
       <Navbar currentPage="reservas" />
+
+      {/* Toasts */}
+      <div className="toast-container">
+        {toasts.map(toast => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+            duration={toast.duration}
+            onClose={() => removeToast(toast.id)}
+          />
+        ))}
+      </div>
 
       {/* Contenido principal */}
       <main className="reservas-main">
