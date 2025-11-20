@@ -11,13 +11,31 @@ import DashboardSuperAdmin from './pages/DashboardSuperAdmin'
 import DashboardAdmin from './pages/DashboardAdmin'
 import AdminReservas from './pages/AdminReservas'
 import AdminCanchas from './pages/AdminCanchas'
+import { authService } from './services/authService'
 
 export default function App(){
   const [currentPage, setCurrentPage] = useState('home')
+  const [usuario, setUsuario] = useState(null)
+
+  useEffect(() => {
+    // Verificar si hay usuario logueado
+    const user = authService.getCurrentUser()
+    setUsuario(user)
+  }, [])
 
   useEffect(() => {
     function handleHashChange() {
       const hash = window.location.hash.replace('#', '')
+      
+      // Proteger rutas según rol del usuario
+      if (hash && usuario) {
+        if (!authService.canAccessRoute(hash)) {
+          // Redirigir al dashboard correspondiente si no tiene acceso
+          authService.redirectByRole(usuario.rol)
+          return
+        }
+      }
+      
       if (hash === 'register') {
         setCurrentPage('register')
       } else if (hash === 'login') {
@@ -52,7 +70,7 @@ export default function App(){
     window.addEventListener('hashchange', handleHashChange)
     
     return () => window.removeEventListener('hashchange', handleHashChange)
-  }, [])
+  }, [usuario])
 
   if (currentPage === 'register') {
     return <Register />

@@ -9,10 +9,18 @@ export const authService = {
             // Guardar los datos del usuario y el token JWT
             if (response.data) {
                 const userData = {
+                    id: response.data.idUsuario || response.data.id,
                     email: response.data.email,
                     nombre: response.data.nombre,
-                    idUsuario: response.data.idUsuario
+                    rol: response.data.rol || response.data.rolUsuario || 'CLIENTE',
+                    estado: response.data.estado || response.data.estadoUsuario,
+                    establecimiento: response.data.establecimiento // Si es ADMINISTRADOR
                 };
+                
+                // Verificar que el usuario esté activo
+                if (userData.estado !== 'ACTIVO') {
+                    throw new Error('Tu cuenta está inactiva. Contacta al administrador.');
+                }
                 
                 // Si el backend devuelve un token, guardarlo
                 if (response.data.token) {
@@ -20,6 +28,10 @@ export const authService = {
                 }
                 
                 tokenService.setUserData(userData);
+                
+                // Redirigir según el rol
+                authService.redirectByRole(userData.rol);
+                
                 return response.data;
             }
         } catch (error) {
@@ -34,19 +46,35 @@ export const authService = {
         }
     },
 
+    // Redirigir según el rol del usuario
+    redirectByRole: (rol) => {
+        switch(rol) {
+            case 'SUPER_ADMINISTRADOR':
+                window.location.hash = '#dashboard-super-admin';
+                break;
+            case 'ADMINISTRADOR':
+                window.location.hash = '#dashboard-admin';
+                break;
+            case 'CLIENTE':
+            default:
+                window.location.hash = '#home';
+                break;
+        }
+    },
+
     register: async (userData) => {
         try {
             console.log('Datos de registro recibidos en authService:', userData);
             
             // Remover espacios en blanco y asegurarse de que los datos estén en el formato correcto
             const formattedData = {
-                cedula: parseInt(userData.cedula.replace(/\s/g, '')),
-                nombre: userData.nombre.trim(),
+                nombre_completo: userData.nombre.trim(),
+                cedula: userData.cedula.replace(/\s/g, ''),
+                telefono: userData.telefono.replace(/\s/g, ''),
                 email: userData.email.trim().toLowerCase(),
                 password: userData.password,
-                telefono: userData.telefono.replace(/\s/g, ''),
-                estadoUsuario: "ACTIVO",
-                rolUsuario: "CLIENTE"
+                rol: "CLIENTE", // Siempre CLIENTE en registro público
+                estado: "ACTIVO"
             };
             
             console.log('Datos formateados para enviar al servidor:', formattedData);
@@ -80,7 +108,7 @@ export const authService = {
 
     logout: () => {
         tokenService.clearUserData();
-        window.location.hash = 'login';
+        window.location.hash = '#login';
     },
 
     // Verificar si el usuario está autenticado
@@ -91,5 +119,32 @@ export const authService = {
     // Obtener información del usuario actual
     getCurrentUser: () => {
         return tokenService.getUserData();
+    },
+
+    // Verificar si el usuario tiene un rol específico
+    hasRole: (rol) => {
+        const user = tokenService.getUserData();
+        return user && user.rol === rol;
+    },
+
+    // Verificar si el usuario puede acceder a una ruta
+    canAccessRoute: (route) => {
+        const user = tokenService.getUserData();
+        if (!user) return false;
+
+        // Rutas de SUPER_ADMINISTRADOR
+        const superAdminRoutes = ['dashboard-super-admin', 'admin-usuarios', 'admin-establecimientos'];
+        if (superAdminRoutes.some(r => route.includes(r))) {
+            return user.rol === 'SUPER_ADMINISTRADOR';
+        }
+
+        // Rutas de ADMINISTRADOR
+        const adminRoutes = ['dashboard-admin', 'admin-reservas', 'admin-canchas'];
+        if (adminRoutes.some(r => route.includes(r))) {
+            return user.rol === 'ADMINISTRADOR';
+        }
+
+        // Rutas de CLIENTE (por defecto accesibles)
+        return true;
     }
 };
