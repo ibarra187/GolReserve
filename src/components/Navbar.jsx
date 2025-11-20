@@ -34,7 +34,7 @@ export default function Navbar({ currentPage = 'home' }) {
                             href="#mis-reservas"
                             className={`nav-link ${currentPage === 'mis-reservas' ? 'active' : ''}`}
                         >
-                            Mis Reservas
+                            Mis reservas
                         </a>
                         <a 
                             href="#profile"

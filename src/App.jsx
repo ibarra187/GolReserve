@@ -5,6 +5,12 @@ import Home from './pages/home'
 import Reservas from './pages/reservas'
 import Profile from './pages/profile'
 import MisReservas from './pages/MisReservas'
+import AdminUsuarios from './pages/AdminUsuarios'
+import AdminEstablecimientos from './pages/AdminEstablecimientos'
+import DashboardSuperAdmin from './pages/DashboardSuperAdmin'
+import DashboardAdmin from './pages/DashboardAdmin'
+import AdminReservas from './pages/AdminReservas'
+import AdminCanchas from './pages/AdminCanchas'
 
 export default function App(){
   const [currentPage, setCurrentPage] = useState('home')
@@ -22,6 +28,18 @@ export default function App(){
         setCurrentPage('mis-reservas')
       } else if (hash === 'profile') {
         setCurrentPage('profile')
+      } else if (hash === 'admin-usuarios') {
+        setCurrentPage('admin-usuarios')
+      } else if (hash === 'admin-establecimientos') {
+        setCurrentPage('admin-establecimientos')
+      } else if (hash === 'dashboard-super-admin') {
+        setCurrentPage('dashboard-super-admin')
+      } else if (hash === 'dashboard-admin') {
+        setCurrentPage('dashboard-admin')
+      } else if (hash === 'admin-reservas') {
+        setCurrentPage('admin-reservas')
+      } else if (hash === 'admin-canchas') {
+        setCurrentPage('admin-canchas')
       } else {
         setCurrentPage('home')
       }
@@ -54,6 +72,30 @@ export default function App(){
 
   if (currentPage === 'profile') {
     return <Profile />
+  }
+
+  if (currentPage === 'admin-usuarios') {
+    return <AdminUsuarios />
+  }
+
+  if (currentPage === 'admin-establecimientos') {
+    return <AdminEstablecimientos />
+  }
+
+  if (currentPage === 'dashboard-super-admin') {
+    return <DashboardSuperAdmin />
+  }
+
+  if (currentPage === 'dashboard-admin') {
+    return <DashboardAdmin />
+  }
+
+  if (currentPage === 'admin-reservas') {
+    return <AdminReservas />
+  }
+
+  if (currentPage === 'admin-canchas') {
+    return <AdminCanchas />
   }
   
   return <Home />

@@ -1,0 +1,364 @@
+/* DashboardAdmin.css */
+
+.dashboard-admin-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.dashboard-admin-main {
+  padding: 2rem 0 4rem 0;
+  min-height: calc(100vh - 80px);
+}
+
+.dashboard-admin-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Header del establecimiento */
+.establecimiento-header {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(76, 175, 80, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.establecimiento-info {
+  flex: 1;
+}
+
+.establecimiento-nombre {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.establecimiento-direccion {
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.fecha-actual {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.fecha-label {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fecha-value {
+  font-size: 1rem;
+  color: #1e293b;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Grid de estadísticas */
+.estadisticas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.card-hoy .stat-icon {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.card-hoy:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.card-mes .stat-icon {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.card-mes:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.card-ingresos .stat-icon {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.card-ingresos:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.card-ocupacion .stat-icon {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.card-ocupacion:hover {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* Grid de acciones */
+.acciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.accion-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 2px solid transparent;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.accion-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4caf50 0%, #45a049 100%);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.accion-card:hover::before {
+  transform: scaleX(1);
+}
+
+.accion-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.card-reservas .accion-icon {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+}
+
+.card-reservas:hover {
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+.card-canchas .accion-icon {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.card-canchas:hover {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.card-estadisticas-detalladas .accion-icon {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.card-estadisticas-detalladas:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.accion-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  color: white;
+}
+
+.accion-content {
+  flex: 1;
+}
+
+.accion-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.accion-description {
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.accion-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mini-stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #4caf50;
+  line-height: 1;
+}
+
+.mini-stat-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.accion-arrow {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  font-size: 2rem;
+  color: #4caf50;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.accion-card:hover .accion-arrow {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .acciones-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .establecimiento-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+  }
+
+  .fecha-actual {
+    align-items: flex-start;
+  }
+
+  .establecimiento-nombre {
+    font-size: 1.5rem;
+  }
+
+  .estadisticas-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .stat-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .acciones-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .accion-card {
+    padding: 2rem;
+  }
+
+  .accion-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .accion-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .accion-title {
+    font-size: 1.25rem;
+  }
+}
