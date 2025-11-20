@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Navbar from '../components/navbar'
+import { superAdminService } from '../services/superAdminService'
 import '../styles/AdminEstablecimientos.css'
 
 export default function AdminEstablecimientos() {
@@ -8,49 +9,23 @@ export default function AdminEstablecimientos() {
   const [modalAbierto, setModalAbierto] = useState(false)
   const [adminSeleccionado, setAdminSeleccionado] = useState(null)
   const [accionModal, setAccionModal] = useState('') // 'editar' o 'eliminar'
+  const [loading, setLoading] = useState(true)
 
-  // Datos de ejemplo - reemplazar con llamada a API
   useEffect(() => {
-    const adminsEjemplo = [
-      { 
-        id: 1, 
-        nombre: 'Pedro Sánchez', 
-        email: 'pedro@admin.com', 
-        cedula: '9988776655', 
-        telefono: '3009988776',
-        establecimiento: 'Cancha Sintética Los Pinos',
-        direccion: 'Calle 45 #23-10',
-        ciudad: 'Cali',
-        fechaRegistro: '2025-09-01',
-        estado: 'ACTIVO'
-      },
-      { 
-        id: 2, 
-        nombre: 'Laura Rodríguez', 
-        email: 'laura@admin.com', 
-        cedula: '6677889900', 
-        telefono: '3006677889',
-        establecimiento: 'Complejo Deportivo El Estadio',
-        direccion: 'Carrera 100 #15-25',
-        ciudad: 'Cali',
-        fechaRegistro: '2025-09-15',
-        estado: 'ACTIVO'
-      },
-      { 
-        id: 3, 
-        nombre: 'Roberto Díaz', 
-        email: 'roberto@admin.com', 
-        cedula: '4455667788', 
-        telefono: '3004455667',
-        establecimiento: 'Canchas Sinteticas La Pradera',
-        direccion: 'Avenida 3N #45-67',
-        ciudad: 'Cali',
-        fechaRegistro: '2025-10-01',
-        estado: 'ACTIVO'
-      },
-    ]
-    setAdministradores(adminsEjemplo)
+    cargarAdministradores()
   }, [])
+
+  const cargarAdministradores = async () => {
+    try {
+      const data = await superAdminService.getAdministradores()
+      setAdministradores(data)
+    } catch (error) {
+      console.error('Error al cargar administradores:', error)
+      alert('Error al cargar administradores: ' + error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const abrirModalEditar = (admin) => {
     setAdminSeleccionado(admin)
@@ -70,13 +45,28 @@ export default function AdminEstablecimientos() {
     setAccionModal('')
   }
 
-  const confirmarAccion = () => {
-    if (accionModal === 'eliminar') {
-      // Aquí iría la llamada a la API para eliminar
-      setAdministradores(administradores.filter(a => a.id !== adminSeleccionado.id))
+  const confirmarAccion = async () => {
+    try {
+      if (accionModal === 'eliminar') {
+        await superAdminService.eliminarAdministrador(adminSeleccionado.idUsuario)
+        alert('Administrador eliminado exitosamente')
+        cargarAdministradores()
+      }
+      cerrarModal()
+    } catch (error) {
+      alert('Error: ' + error.message)
     }
-    // Para editar, se necesitaría un formulario más complejo
-    cerrarModal()
+  }
+
+  const cambiarEstado = async (admin) => {
+    const nuevoEstado = admin.estadoUsuario === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO'
+    try {
+      await superAdminService.cambiarEstadoAdmin(admin.idUsuario, nuevoEstado)
+      alert('Estado actualizado exitosamente')
+      cargarAdministradores()
+    } catch (error) {
+      alert('Error al cambiar estado: ' + error.message)
+    }
   }
 
   const toggleEstado = (id) => {
@@ -86,11 +76,22 @@ export default function AdminEstablecimientos() {
   }
 
   const administradoresFiltrados = administradores.filter(admin =>
-    admin.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
-    admin.email.toLowerCase().includes(filtro.toLowerCase()) ||
-    admin.establecimiento.toLowerCase().includes(filtro.toLowerCase()) ||
-    admin.ciudad.toLowerCase().includes(filtro.toLowerCase())
+    admin.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+    admin.email?.toLowerCase().includes(filtro.toLowerCase()) ||
+    admin.establecimiento?.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+    admin.establecimiento?.ciudad?.toLowerCase().includes(filtro.toLowerCase())
   )
+
+  if (loading) {
+    return (
+      <div className="admin-establecimientos-container">
+        <Navbar />
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <p>Cargando administradores...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="admin-establecimientos-container">
@@ -124,7 +125,7 @@ export default function AdminEstablecimientos() {
               <div className="stat-item">
                 <span className="stat-label">Activos:</span>
                 <span className="stat-value stat-active">
-                  {administradores.filter(a => a.estado === 'ACTIVO').length}
+                  {administradores.filter(a => a.estadoUsuario === 'ACTIVO').length}
                 </span>
               </div>
             </div>
@@ -148,8 +149,8 @@ export default function AdminEstablecimientos() {
               </thead>
               <tbody>
                 {administradoresFiltrados.map((admin) => (
-                  <tr key={admin.id}>
-                    <td>{admin.id}</td>
+                  <tr key={admin.idUsuario}>
+                    <td>{admin.idUsuario}</td>
                     <td className="nombre-cell">
                       <div className="admin-info">
                         <strong>{admin.nombre}</strong>
@@ -159,19 +160,19 @@ export default function AdminEstablecimientos() {
                     <td>{admin.email}</td>
                     <td>{admin.telefono}</td>
                     <td className="establecimiento-cell">
-                      <strong>{admin.establecimiento}</strong>
+                      <strong>{admin.establecimiento?.nombre || 'Sin establecimiento'}</strong>
                     </td>
-                    <td>{admin.direccion}</td>
-                    <td>{admin.ciudad}</td>
+                    <td>{admin.establecimiento?.direccion || '-'}</td>
+                    <td>{admin.establecimiento?.ciudad || '-'}</td>
                     <td>
                       <button
-                        className={`estado-toggle ${admin.estado.toLowerCase()}`}
-                        onClick={() => toggleEstado(admin.id)}
+                        className={`estado-toggle ${admin.estadoUsuario?.toLowerCase() || 'activo'}`}
+                        onClick={() => cambiarEstado(admin)}
                       >
-                        {admin.estado}
+                        {admin.estadoUsuario}
                       </button>
                     </td>
-                    <td>{new Date(admin.fechaRegistro).toLocaleDateString('es-ES')}</td>
+                    <td>{admin.fechaRegistro ? new Date(admin.fechaRegistro).toLocaleDateString('es-ES') : '-'}</td>
                     <td>
                       <div className="acciones-cell">
                         <button 

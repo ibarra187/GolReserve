@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Navbar from '../components/navbar'
+import { superAdminService } from '../services/superAdminService'
 import '../styles/AdminUsuarios.css'
 
 export default function AdminUsuarios() {
@@ -8,21 +9,27 @@ export default function AdminUsuarios() {
   const [modalAbierto, setModalAbierto] = useState(false)
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null)
   const [nuevoRol, setNuevoRol] = useState('')
+  const [loading, setLoading] = useState(true)
 
-  // Datos de ejemplo - reemplazar con llamada a API
   useEffect(() => {
-    const usuariosEjemplo = [
-      { id: 1, nombre: 'Juan Pérez', email: 'juan@email.com', cedula: '1234567890', telefono: '3001234567', rol: 'CLIENTE', fechaRegistro: '2025-10-15' },
-      { id: 2, nombre: 'María García', email: 'maria@email.com', cedula: '0987654321', telefono: '3009876543', rol: 'CLIENTE', fechaRegistro: '2025-10-20' },
-      { id: 3, nombre: 'Carlos López', email: 'carlos@email.com', cedula: '1122334455', telefono: '3001122334', rol: 'CLIENTE', fechaRegistro: '2025-11-01' },
-      { id: 4, nombre: 'Ana Martínez', email: 'ana@email.com', cedula: '5544332211', telefono: '3005544332', rol: 'CLIENTE', fechaRegistro: '2025-11-10' },
-    ]
-    setUsuarios(usuariosEjemplo)
+    cargarUsuarios()
   }, [])
+
+  const cargarUsuarios = async () => {
+    try {
+      const data = await superAdminService.getClientes()
+      setUsuarios(data)
+    } catch (error) {
+      console.error('Error al cargar usuarios:', error)
+      alert('Error al cargar usuarios: ' + error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const abrirModalCambioRol = (usuario) => {
     setUsuarioSeleccionado(usuario)
-    setNuevoRol(usuario.rol)
+    setNuevoRol(usuario.rolUsuario)
     setModalAbierto(true)
   }
 
@@ -32,19 +39,33 @@ export default function AdminUsuarios() {
     setNuevoRol('')
   }
 
-  const cambiarRol = () => {
-    // Aquí iría la llamada a la API para cambiar el rol
-    setUsuarios(usuarios.map(u => 
-      u.id === usuarioSeleccionado.id ? { ...u, rol: nuevoRol } : u
-    ))
-    cerrarModal()
+  const cambiarRol = async () => {
+    try {
+      await superAdminService.cambiarRol(usuarioSeleccionado.idUsuario, nuevoRol)
+      alert('Rol actualizado exitosamente')
+      cargarUsuarios() // Recargar lista
+      cerrarModal()
+    } catch (error) {
+      alert('Error al cambiar rol: ' + error.message)
+    }
   }
 
   const usuariosFiltrados = usuarios.filter(usuario =>
-    usuario.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
-    usuario.email.toLowerCase().includes(filtro.toLowerCase()) ||
-    usuario.cedula.includes(filtro)
+    usuario.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+    usuario.email?.toLowerCase().includes(filtro.toLowerCase()) ||
+    usuario.cedula?.includes(filtro)
   )
+
+  if (loading) {
+    return (
+      <div className="admin-usuarios-container">
+        <Navbar />
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <p>Cargando usuarios...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="admin-usuarios-container">
@@ -92,18 +113,18 @@ export default function AdminUsuarios() {
               </thead>
               <tbody>
                 {usuariosFiltrados.map((usuario) => (
-                  <tr key={usuario.id}>
-                    <td>{usuario.id}</td>
+                  <tr key={usuario.idUsuario}>
+                    <td>{usuario.idUsuario}</td>
                     <td className="nombre-cell">{usuario.nombre}</td>
                     <td>{usuario.email}</td>
                     <td>{usuario.cedula}</td>
                     <td>{usuario.telefono}</td>
                     <td>
-                      <span className={`rol-badge rol-${usuario.rol.toLowerCase()}`}>
-                        {usuario.rol}
+                      <span className={`rol-badge rol-${usuario.rolUsuario?.toLowerCase() || 'cliente'}`}>
+                        {usuario.rolUsuario}
                       </span>
                     </td>
-                    <td>{new Date(usuario.fechaRegistro).toLocaleDateString('es-ES')}</td>
+                    <td>{usuario.fechaRegistro ? new Date(usuario.fechaRegistro).toLocaleDateString('es-ES') : '-'}</td>
                     <td>
                       <button 
                         className="btn-cambiar-rol"

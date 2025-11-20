@@ -1,8 +1,45 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from '../components/navbar'
+import { superAdminService } from '../services/superAdminService'
 import '../styles/DashboardSuperAdmin.css'
 
 export default function DashboardSuperAdmin() {
+  const [estadisticas, setEstadisticas] = useState({
+    totalUsuarios: 0,
+    totalClientes: 0,
+    totalAdministradores: 0,
+    totalEstablecimientos: 0,
+    totalReservas: 0,
+    ingresosTotales: 0
+  })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    cargarEstadisticas()
+  }, [])
+
+  const cargarEstadisticas = async () => {
+    try {
+      const data = await superAdminService.getEstadisticas()
+      setEstadisticas(data)
+    } catch (error) {
+      console.error('Error al cargar estadísticas:', error)
+      // Mantener valores por defecto en caso de error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="dashboard-super-admin-container">
+        <Navbar />
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <p>Cargando estadísticas...</p>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="dashboard-super-admin-container">
       <Navbar />
@@ -30,7 +67,7 @@ export default function DashboardSuperAdmin() {
                 </p>
                 <div className="card-stats">
                   <div className="stat">
-                    <span className="stat-number">45</span>
+                    <span className="stat-number">{estadisticas.totalClientes || 0}</span>
                     <span className="stat-label">Usuarios Activos</span>
                   </div>
                 </div>
@@ -57,7 +94,7 @@ export default function DashboardSuperAdmin() {
                 </p>
                 <div className="card-stats">
                   <div className="stat">
-                    <span className="stat-number">12</span>
+                    <span className="stat-number">{estadisticas.totalEstablecimientos || 0}</span>
                     <span className="stat-label">Establecimientos</span>
                   </div>
                 </div>
@@ -83,12 +120,12 @@ export default function DashboardSuperAdmin() {
                 </p>
                 <div className="stats-grid">
                   <div className="stat-mini">
-                    <span className="stat-mini-value">287</span>
+                    <span className="stat-mini-value">{estadisticas.totalReservas || 0}</span>
                     <span className="stat-mini-label">Reservas Totales</span>
                   </div>
                   <div className="stat-mini">
-                    <span className="stat-mini-value">$2.5M</span>
-                    <span className="stat-mini-label">Ingresos Mes</span>
+                    <span className="stat-mini-value">${estadisticas.ingresosTotales ? (estadisticas.ingresosTotales / 1000000).toFixed(1) : 0}M</span>
+                    <span className="stat-mini-label">Ingresos Totales</span>
                   </div>
                 </div>
               </div>

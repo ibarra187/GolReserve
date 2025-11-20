@@ -26,19 +26,13 @@ export default function Login(){
     }
 
     try {
-      const response = await authService.login(email, password)
+      await authService.login(email, password)
+      // authService.login ya maneja la redirección automática según el rol
       setIsError(false)
       setMessage('Inicio de sesión exitoso. Redirigiendo...')
-      // Redirigir después de un login exitoso
-      setTimeout(() => {
-        window.location.hash = 'home'
-      }, 1500)
     } catch (error) {
       setIsError(true)
       setMessage(error.message || 'Error al iniciar sesión')
-      setTimeout(()=>{
-        window.location.href = '#'
-      },800)
     }
   }
 

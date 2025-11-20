@@ -1,94 +1,68 @@
 import React, { useState, useEffect } from 'react'
 import Navbar from '../components/navbar'
+import { adminService } from '../services/adminService'
 import '../styles/AdminReservas.css'
 
 export default function AdminReservas() {
-  const [filtroEstado, setFiltroEstado] = useState('todas') // todas, activas, pasadas, canceladas
+  const [filtroEstado, setFiltroEstado] = useState(null) // null, 'CONFIRMADA', 'CANCELADA', 'COMPLETADA'
   const [busqueda, setBusqueda] = useState('')
   const [reservas, setReservas] = useState([])
   const [modalDetalles, setModalDetalles] = useState(false)
   const [reservaSeleccionada, setReservaSeleccionada] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // Datos de ejemplo - reemplazar con API
   useEffect(() => {
-    const reservasEjemplo = [
-      { 
-        id: 1, 
-        cliente: 'Juan Pérez', 
-        email: 'juan@email.com',
-        telefono: '3001234567',
-        cancha: 'Fútbol 5', 
-        fecha: '2025-11-21', 
-        hora: '15:00', 
-        duracion: '1 hora',
-        precio: 50000,
-        estado: 'activa' 
-      },
-      { 
-        id: 2, 
-        cliente: 'María García', 
-        email: 'maria@email.com',
-        telefono: '3009876543',
-        cancha: 'Fútbol 7', 
-        fecha: '2025-11-22', 
-        hora: '18:00', 
-        duracion: '1.5 horas',
-        precio: 70000,
-        estado: 'activa' 
-      },
-      { 
-        id: 3, 
-        cliente: 'Carlos López', 
-        email: 'carlos@email.com',
-        telefono: '3001122334',
-        cancha: 'Fútbol 11', 
-        fecha: '2025-11-18', 
-        hora: '20:00', 
-        duracion: '2 horas',
-        precio: 100000,
-        estado: 'pasada' 
-      },
-      { 
-        id: 4, 
-        cliente: 'Ana Martínez', 
-        email: 'ana@email.com',
-        telefono: '3005544332',
-        cancha: 'Fútbol 5', 
-        fecha: '2025-11-19', 
-        hora: '16:00', 
-        duracion: '1 hora',
-        precio: 50000,
-        estado: 'cancelada' 
-      },
-      { 
-        id: 5, 
-        cliente: 'Luis Rodríguez', 
-        email: 'luis@email.com',
-        telefono: '3007788990',
-        cancha: 'Fútbol 7', 
-        fecha: '2025-11-23', 
-        hora: '19:00', 
-        duracion: '1 hora',
-        precio: 70000,
-        estado: 'activa' 
-      },
-    ]
-    setReservas(reservasEjemplo)
-  }, [])
+    cargarReservas()
+  }, [filtroEstado])
+
+  const cargarReservas = async () => {
+    try {
+      setLoading(true)
+      const data = await adminService.getReservas(filtroEstado)
+      setReservas(data)
+    } catch (error) {
+      console.error('Error al cargar reservas:', error)
+      alert('Error al cargar reservas: ' + error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const cambiarEstadoReserva = async (reservaId, nuevoEstado) => {
+    try {
+      if (nuevoEstado === 'CANCELADA') {
+        await adminService.cancelarReserva(reservaId)
+        alert('Reserva cancelada exitosamente')
+        cargarReservas()
+      }
+    } catch (error) {
+      alert('Error: ' + error.message)
+    }
+  }
 
   const reservasFiltradas = reservas.filter(reserva => {
-    const cumpleFiltroEstado = filtroEstado === 'todas' || reserva.estado === filtroEstado
     const cumpleBusqueda = 
-      reserva.cliente.toLowerCase().includes(busqueda.toLowerCase()) ||
-      reserva.cancha.toLowerCase().includes(busqueda.toLowerCase()) ||
-      reserva.email.toLowerCase().includes(busqueda.toLowerCase())
+      reserva.cliente?.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      reserva.cancha?.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      reserva.cliente?.email?.toLowerCase().includes(busqueda.toLowerCase())
     
-    return cumpleFiltroEstado && cumpleBusqueda
+    return cumpleBusqueda
   })
 
   const contarPorEstado = (estado) => {
-    if (estado === 'todas') return reservas.length
-    return reservas.filter(r => r.estado === estado).length
+    if (estado === null) return reservas.length
+    return reservas.filter(r => r.estadoReserva === estado).length
+  }
+
+  if (loading) {
+    return (
+      <div className="admin-reservas-container">
+        <Navbar />
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <p>Cargando reservas...</p>
+        </div>
+      </div>
+    )
   }
 
   const abrirDetalles = (reserva) => {
@@ -101,10 +75,11 @@ export default function AdminReservas() {
     setReservaSeleccionada(null)
   }
 
-  const cambiarEstadoReserva = (nuevoEstado) => {
-    setReservas(reservas.map(r => 
-      r.id === reservaSeleccionada.id ? { ...r, estado: nuevoEstado } : r
-    ))
+  const handleCancelarReserva = async () => {
+    if (!reservaSeleccionada) return
+    if (!confirm('¿Estás seguro de cancelar esta reserva?')) return
+    
+    await cambiarEstadoReserva(reservaSeleccionada.idReserva, 'CANCELADA')
     cerrarModal()
   }
 
@@ -122,32 +97,32 @@ export default function AdminReservas() {
           {/* Filtros de estado */}
           <div className="filtros-estado">
             <button 
-              className={`filtro-btn ${filtroEstado === 'todas' ? 'active' : ''}`}
-              onClick={() => setFiltroEstado('todas')}
+              className={`filtro-btn ${filtroEstado === null ? 'active' : ''}`}
+              onClick={() => setFiltroEstado(null)}
             >
               <span className="filtro-label">Todas</span>
-              <span className="filtro-count">{contarPorEstado('todas')}</span>
+              <span className="filtro-count">{contarPorEstado(null)}</span>
             </button>
             <button 
-              className={`filtro-btn ${filtroEstado === 'activa' ? 'active' : ''}`}
-              onClick={() => setFiltroEstado('activa')}
+              className={`filtro-btn ${filtroEstado === 'CONFIRMADA' ? 'active' : ''}`}
+              onClick={() => setFiltroEstado('CONFIRMADA')}
             >
               <span className="filtro-label">Activas</span>
-              <span className="filtro-count">{contarPorEstado('activa')}</span>
+              <span className="filtro-count">{contarPorEstado('CONFIRMADA')}</span>
             </button>
             <button 
-              className={`filtro-btn ${filtroEstado === 'pasada' ? 'active' : ''}`}
-              onClick={() => setFiltroEstado('pasada')}
+              className={`filtro-btn ${filtroEstado === 'COMPLETADA' ? 'active' : ''}`}
+              onClick={() => setFiltroEstado('COMPLETADA')}
             >
-              <span className="filtro-label">Pasadas</span>
-              <span className="filtro-count">{contarPorEstado('pasada')}</span>
+              <span className="filtro-label">Completadas</span>
+              <span className="filtro-count">{contarPorEstado('COMPLETADA')}</span>
             </button>
             <button 
-              className={`filtro-btn ${filtroEstado === 'cancelada' ? 'active' : ''}`}
-              onClick={() => setFiltroEstado('cancelada')}
+              className={`filtro-btn ${filtroEstado === 'CANCELADA' ? 'active' : ''}`}
+              onClick={() => setFiltroEstado('CANCELADA')}
             >
               <span className="filtro-label">Canceladas</span>
-              <span className="filtro-count">{contarPorEstado('cancelada')}</span>
+              <span className="filtro-count">{contarPorEstado('CANCELADA')}</span>
             </button>
           </div>
 
@@ -184,23 +159,23 @@ export default function AdminReservas() {
               </thead>
               <tbody>
                 {reservasFiltradas.map((reserva) => (
-                  <tr key={reserva.id}>
-                    <td>#{reserva.id}</td>
-                    <td className="cliente-cell">{reserva.cliente}</td>
+                  <tr key={reserva.idReserva}>
+                    <td>#{reserva.idReserva}</td>
+                    <td className="cliente-cell">{reserva.cliente?.nombre || 'N/A'}</td>
                     <td>
                       <div className="contacto-info">
-                        <small>{reserva.email}</small>
-                        <small>{reserva.telefono}</small>
+                        <small>{reserva.cliente?.email || '-'}</small>
+                        <small>{reserva.cliente?.telefono || '-'}</small>
                       </div>
                     </td>
-                    <td className="cancha-cell">{reserva.cancha}</td>
-                    <td>{new Date(reserva.fecha).toLocaleDateString('es-ES')}</td>
-                    <td className="hora-cell">{reserva.hora}</td>
-                    <td>{reserva.duracion}</td>
-                    <td className="precio-cell">${reserva.precio.toLocaleString()}</td>
+                    <td className="cancha-cell">{reserva.cancha?.nombre || 'N/A'}</td>
+                    <td>{reserva.fecha ? new Date(reserva.fecha).toLocaleDateString('es-ES') : '-'}</td>
+                    <td className="hora-cell">{reserva.horaInicio} - {reserva.horaFin}</td>
+                    <td>{reserva.duracionMinutos ? `${reserva.duracionMinutos} min` : '-'}</td>
+                    <td className="precio-cell">${reserva.precioTotal ? reserva.precioTotal.toLocaleString() : '0'}</td>
                     <td>
-                      <span className={`estado-badge estado-${reserva.estado}`}>
-                        {reserva.estado.charAt(0).toUpperCase() + reserva.estado.slice(1)}
+                      <span className={`estado-badge estado-${reserva.estadoReserva?.toLowerCase() || 'pendiente'}`}>
+                        {reserva.estadoReserva || 'PENDIENTE'}
                       </span>
                     </td>
                     <td>
@@ -230,7 +205,7 @@ export default function AdminReservas() {
         <div className="modal-overlay" onClick={cerrarModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2 className="modal-title">Detalles de la Reserva #{reservaSeleccionada.id}</h2>
+              <h2 className="modal-title">Detalles de la Reserva #{reservaSeleccionada.idReserva}</h2>
               <button className="modal-close" onClick={cerrarModal}>×</button>
             </div>
             
@@ -240,15 +215,15 @@ export default function AdminReservas() {
                 <div className="detalle-grid">
                   <div className="detalle-item">
                     <span className="detalle-label">Nombre:</span>
-                    <span className="detalle-value">{reservaSeleccionada.cliente}</span>
+                    <span className="detalle-value">{reservaSeleccionada.cliente?.nombre || 'N/A'}</span>
                   </div>
                   <div className="detalle-item">
                     <span className="detalle-label">Email:</span>
-                    <span className="detalle-value">{reservaSeleccionada.email}</span>
+                    <span className="detalle-value">{reservaSeleccionada.cliente?.email || '-'}</span>
                   </div>
                   <div className="detalle-item">
                     <span className="detalle-label">Teléfono:</span>
-                    <span className="detalle-value">{reservaSeleccionada.telefono}</span>
+                    <span className="detalle-value">{reservaSeleccionada.cliente?.telefono || '-'}</span>
                   </div>
                 </div>
               </div>
@@ -258,28 +233,28 @@ export default function AdminReservas() {
                 <div className="detalle-grid">
                   <div className="detalle-item">
                     <span className="detalle-label">Cancha:</span>
-                    <span className="detalle-value">{reservaSeleccionada.cancha}</span>
+                    <span className="detalle-value">{reservaSeleccionada.cancha?.nombre || 'N/A'}</span>
                   </div>
                   <div className="detalle-item">
                     <span className="detalle-label">Fecha:</span>
-                    <span className="detalle-value">{new Date(reservaSeleccionada.fecha).toLocaleDateString('es-ES')}</span>
+                    <span className="detalle-value">{reservaSeleccionada.fecha ? new Date(reservaSeleccionada.fecha).toLocaleDateString('es-ES') : '-'}</span>
                   </div>
                   <div className="detalle-item">
-                    <span className="detalle-label">Hora:</span>
-                    <span className="detalle-value">{reservaSeleccionada.hora}</span>
+                    <span className="detalle-label">Horario:</span>
+                    <span className="detalle-value">{reservaSeleccionada.horaInicio} - {reservaSeleccionada.horaFin}</span>
                   </div>
                   <div className="detalle-item">
                     <span className="detalle-label">Duración:</span>
-                    <span className="detalle-value">{reservaSeleccionada.duracion}</span>
+                    <span className="detalle-value">{reservaSeleccionada.duracionMinutos} minutos</span>
                   </div>
                   <div className="detalle-item">
                     <span className="detalle-label">Precio:</span>
-                    <span className="detalle-value precio">${reservaSeleccionada.precio.toLocaleString()}</span>
+                    <span className="detalle-value precio">${reservaSeleccionada.precioTotal ? reservaSeleccionada.precioTotal.toLocaleString() : '0'}</span>
                   </div>
                   <div className="detalle-item">
                     <span className="detalle-label">Estado:</span>
-                    <span className={`estado-badge estado-${reservaSeleccionada.estado}`}>
-                      {reservaSeleccionada.estado.charAt(0).toUpperCase() + reservaSeleccionada.estado.slice(1)}
+                    <span className={`estado-badge estado-${reservaSeleccionada.estadoReserva?.toLowerCase() || 'pendiente'}`}>
+                      {reservaSeleccionada.estadoReserva || 'PENDIENTE'}
                     </span>
                   </div>
                 </div>
@@ -287,10 +262,10 @@ export default function AdminReservas() {
             </div>
 
             <div className="modal-footer">
-              {reservaSeleccionada.estado === 'activa' && (
+              {reservaSeleccionada.estadoReserva === 'CONFIRMADA' && (
                 <button 
                   className="btn-accion btn-cancelar-reserva"
-                  onClick={() => cambiarEstadoReserva('cancelada')}
+                  onClick={handleCancelarReserva}
                 >
                   Cancelar Reserva
                 </button>

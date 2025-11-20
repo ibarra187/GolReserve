@@ -88,23 +88,23 @@ export default function Register() {
 
     // ✅ Enviar datos al backend
     try {
-      console.log('Preparando datos para registro:', formData);
       const userData = {
-        cedula: formData.cedula.trim(),
         nombre: formData.nombre.trim(),
+        cedula: formData.cedula.trim(),
+        telefono: formData.telefono.trim(),
         email: formData.correo.trim(),
-        password: formData.password,
-        telefono: formData.telefono.trim()
+        password: formData.password
       }
-      console.log('Datos formateados para registro:', userData);
 
-      await authService.register(userData)
-      setIsError(false)
-      setMessage('Registro exitoso. Redirigiendo al login...')
-
-      setTimeout(() => {
-        window.location.hash = 'login'
-      }, 1500)
+      const result = await authService.register(userData)
+      
+      if (result.success) {
+        setIsError(false)
+        setMessage('¡Registro exitoso! Redirigiendo al login...')
+        setTimeout(() => {
+          window.location.hash = 'login'
+        }, 1500)
+      }
     } catch (error) {
       setIsError(true)
       setMessage(error.message || 'Error al registrar el usuario.')

@@ -1,22 +1,58 @@
 import React, { useState, useEffect } from 'react'
 import Navbar from '../components/navbar'
+import { adminService } from '../services/adminService'
 import '../styles/DashboardAdmin.css'
 
 export default function DashboardAdmin() {
-  const [establecimiento] = useState({
-    nombre: 'Cancha Sintética Los Pinos',
-    direccion: 'Calle 45 #23-10',
-    ciudad: 'Cali'
-  })
+  const [dashboard, setDashboard] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  const [estadisticas] = useState({
-    reservasHoy: 8,
-    reservasMes: 127,
-    ingresosMes: 6350000,
-    canchasActivas: 3,
-    clientesRecurrentes: 45,
-    promedioOcupacion: 78
-  })
+  useEffect(() => {
+    cargarDashboard()
+  }, [])
+
+  const cargarDashboard = async () => {
+    try {
+      const data = await adminService.getDashboard()
+      setDashboard(data)
+    } catch (error) {
+      console.error('Error al cargar dashboard:', error)
+      // Mantener valores por defecto en caso de error
+      setDashboard({
+        establecimiento: { nombre: 'Mi Establecimiento', direccion: '', ciudad: '' },
+        reservasHoy: 0,
+        reservasMes: 0,
+        ingresosMes: 0,
+        canchasActivas: 0,
+        clientesRecurrentes: 0,
+        promedioOcupacion: 0,
+        totalCanchas: 0
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="dashboard-admin-container">
+        <Navbar />
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <p>Cargando dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  const establecimiento = dashboard?.establecimiento || { nombre: 'Mi Establecimiento', direccion: '', ciudad: '' }
+  const estadisticas = {
+    reservasHoy: dashboard?.reservasHoy || 0,
+    reservasMes: dashboard?.reservasMes || 0,
+    ingresosMes: dashboard?.ingresosMes || 0,
+    canchasActivas: dashboard?.totalCanchas || 0,
+    clientesRecurrentes: dashboard?.clientesRecurrentes || 0,
+    promedioOcupacion: dashboard?.promedioOcupacion || 0
+  }
 
   return (
     <div className="dashboard-admin-container">
