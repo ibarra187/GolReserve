@@ -4,6 +4,7 @@ import Register from './pages/register'
 import Home from './pages/home'
 import Reservas from './pages/reservas'
 import Profile from './pages/profile'
+import MisReservas from './pages/MisReservas'
 
 export default function App(){
   const [currentPage, setCurrentPage] = useState('home')
@@ -17,6 +18,8 @@ export default function App(){
         setCurrentPage('login')
       } else if (hash === 'reservas') {
         setCurrentPage('reservas')
+      } else if (hash === 'mis-reservas') {
+        setCurrentPage('mis-reservas')
       } else if (hash === 'profile') {
         setCurrentPage('profile')
       } else {
@@ -43,6 +46,10 @@ export default function App(){
   
   if (currentPage === 'reservas') {
     return <Reservas />
+  }
+
+  if (currentPage === 'mis-reservas') {
+    return <MisReservas />
   }
 
   if (currentPage === 'profile') {
