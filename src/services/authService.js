@@ -16,12 +16,6 @@ export const authService = {
                     estado: response.data.estadoUsuario // Backend usa 'estadoUsuario'
                 };
                 
-                // Solo verificar estado activo para ADMINISTRADORES (propietarios de establecimientos)
-                // Los CLIENTES y SUPER_ADMINISTRADORES pueden acceder siempre
-                if (userData.estado !== 'ACTIVO' && userData.rol === 'ADMINISTRADOR') {
-                    throw new Error('Tu cuenta está inactiva. Contacta al administrador.');
-                }
-                
                 // Guardar token JWT
                 if (response.data.token) {
                     tokenService.setToken(response.data.token);
