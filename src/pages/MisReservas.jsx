@@ -27,7 +27,7 @@ export default function MisReservas() {
         return;
       }
 
-      const todasReservas = await reservaService.getReservasByUsuario(userData.idUsuario);
+      const todasReservas = await reservaService.getReservasByUsuario(userData.id); // Usar 'id' no 'idUsuario'
       setReservas(todasReservas);
     } catch (err) {
       error('Error al cargar las reservas');

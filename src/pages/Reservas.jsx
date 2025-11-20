@@ -148,7 +148,7 @@ export default function Reservas() {
         const horaFinFormateada = `${horaFin.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
         
         const reservaData = {
-          idUsuario: userData.idUsuario,
+          idUsuario: userData.id, // userData usa 'id', no 'idUsuario'
           idCancha: courts[selectedCourt].id,
           fechaReserva: selectedDate.toISOString().split('T')[0], // Formato YYYY-MM-DD
           horaInicio: time,
@@ -158,7 +158,8 @@ export default function Reservas() {
         };
         
         console.log('Enviando reserva:', reservaData);
-        await reservaService.createReserva(reservaData);
+        const resultado = await reservaService.createReserva(reservaData);
+        console.log('Reserva creada exitosamente:', resultado);
       }
       
       success(`¡Reserva confirmada! Se han reservado ${selectedTimes.length} hora(s) para ${courts[selectedCourt].name} el ${formatDate(selectedDate)}`);

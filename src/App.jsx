@@ -7,6 +7,7 @@ import Profile from './pages/profile'
 import MisReservas from './pages/MisReservas'
 import AdminUsuarios from './pages/AdminUsuarios'
 import AdminEstablecimientos from './pages/AdminEstablecimientos'
+import Estadisticas from './pages/Estadisticas'
 import DashboardSuperAdmin from './pages/DashboardSuperAdmin'
 import DashboardAdmin from './pages/DashboardAdmin'
 import AdminReservas from './pages/AdminReservas'
@@ -50,6 +51,8 @@ export default function App(){
         setCurrentPage('admin-usuarios')
       } else if (hash === 'admin-establecimientos') {
         setCurrentPage('admin-establecimientos')
+      } else if (hash === 'estadisticas') {
+        setCurrentPage('estadisticas')
       } else if (hash === 'dashboard-super-admin') {
         setCurrentPage('dashboard-super-admin')
       } else if (hash === 'dashboard-admin') {
@@ -98,6 +101,10 @@ export default function App(){
 
   if (currentPage === 'admin-establecimientos') {
     return <AdminEstablecimientos />
+  }
+
+  if (currentPage === 'estadisticas') {
+    return <Estadisticas />
   }
 
   if (currentPage === 'dashboard-super-admin') {

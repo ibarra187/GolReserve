@@ -10,6 +10,7 @@ export default function AdminEstablecimientos() {
   const [adminSeleccionado, setAdminSeleccionado] = useState(null)
   const [accionModal, setAccionModal] = useState('') // 'editar' o 'eliminar'
   const [loading, setLoading] = useState(true)
+  const [searchFocused, setSearchFocused] = useState(false)
 
   useEffect(() => {
     cargarAdministradores()
@@ -18,6 +19,8 @@ export default function AdminEstablecimientos() {
   const cargarAdministradores = async () => {
     try {
       const data = await superAdminService.getAdministradores()
+      console.log('Datos recibidos del backend:', data)
+      console.log('Primer administrador:', data[0])
       setAdministradores(data)
     } catch (error) {
       console.error('Error al cargar administradores:', error)
@@ -48,7 +51,7 @@ export default function AdminEstablecimientos() {
   const confirmarAccion = async () => {
     try {
       if (accionModal === 'eliminar') {
-        await superAdminService.eliminarAdministrador(adminSeleccionado.idUsuario)
+        await superAdminService.eliminarAdministrador(adminSeleccionado.usuario.idUsuario)
         alert('Administrador eliminado exitosamente')
         cargarAdministradores()
       }
@@ -59,9 +62,9 @@ export default function AdminEstablecimientos() {
   }
 
   const cambiarEstado = async (admin) => {
-    const nuevoEstado = admin.estadoUsuario === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO'
+    const nuevoEstado = admin.usuario.estadoUsuario === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO'
     try {
-      await superAdminService.cambiarEstadoAdmin(admin.idUsuario, nuevoEstado)
+      await superAdminService.cambiarEstadoAdmin(admin.usuario.idUsuario, nuevoEstado)
       alert('Estado actualizado exitosamente')
       cargarAdministradores()
     } catch (error) {
@@ -75,12 +78,15 @@ export default function AdminEstablecimientos() {
     ))
   }
 
-  const administradoresFiltrados = administradores.filter(admin =>
-    admin.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
-    admin.email?.toLowerCase().includes(filtro.toLowerCase()) ||
-    admin.establecimiento?.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
-    admin.establecimiento?.ciudad?.toLowerCase().includes(filtro.toLowerCase())
-  )
+  const administradoresFiltrados = administradores.filter(admin => {
+    const establecimientosTexto = admin.establecimientos?.map(e => 
+      `${e.nombre} ${e.ciudad}`.toLowerCase()
+    ).join(' ') || '';
+    
+    return admin.usuario?.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+      admin.usuario?.email?.toLowerCase().includes(filtro.toLowerCase()) ||
+      establecimientosTexto.includes(filtro.toLowerCase());
+  })
 
   if (loading) {
     return (
@@ -106,7 +112,7 @@ export default function AdminEstablecimientos() {
 
           <div className="admin-toolbar">
             <div className="search-box">
-              <svg className="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`search-icon ${searchFocused || filtro ? 'hidden' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input
@@ -114,6 +120,8 @@ export default function AdminEstablecimientos() {
                 placeholder="Buscar por nombre, email, establecimiento o ciudad..."
                 value={filtro}
                 onChange={(e) => setFiltro(e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
                 className="search-input"
               />
             </div>
@@ -125,7 +133,7 @@ export default function AdminEstablecimientos() {
               <div className="stat-item">
                 <span className="stat-label">Activos:</span>
                 <span className="stat-value stat-active">
-                  {administradores.filter(a => a.estadoUsuario === 'ACTIVO').length}
+                  {administradores.filter(a => a.usuario?.estadoUsuario === 'ACTIVO').length}
                 </span>
               </div>
             </div>
@@ -139,9 +147,7 @@ export default function AdminEstablecimientos() {
                   <th>Administrador</th>
                   <th>Email</th>
                   <th>Teléfono</th>
-                  <th>Establecimiento</th>
-                  <th>Dirección</th>
-                  <th>Ciudad</th>
+                  <th>Establecimientos</th>
                   <th>Estado</th>
                   <th>Fecha Registro</th>
                   <th>Acciones</th>
@@ -149,30 +155,39 @@ export default function AdminEstablecimientos() {
               </thead>
               <tbody>
                 {administradoresFiltrados.map((admin) => (
-                  <tr key={admin.idUsuario}>
-                    <td>{admin.idUsuario}</td>
+                  <tr key={admin.usuario?.idUsuario}>
+                    <td>{admin.usuario?.idUsuario}</td>
                     <td className="nombre-cell">
                       <div className="admin-info">
-                        <strong>{admin.nombre}</strong>
-                        <small>CC: {admin.cedula}</small>
+                        <strong>{admin.usuario?.nombre}</strong>
+                        <small>CC: {admin.usuario?.cedula}</small>
                       </div>
                     </td>
-                    <td>{admin.email}</td>
-                    <td>{admin.telefono}</td>
+                    <td>{admin.usuario?.email}</td>
+                    <td>{admin.usuario?.telefono}</td>
                     <td className="establecimiento-cell">
-                      <strong>{admin.establecimiento?.nombre || 'Sin establecimiento'}</strong>
+                      {admin.establecimientos && admin.establecimientos.length > 0 ? (
+                        <div className="establecimientos-list">
+                          {admin.establecimientos.map((est) => (
+                            <div key={est.id || est.idEstablecimiento} className="establecimiento-item">
+                              <strong>{est.nombre}</strong>
+                              <small>{est.ciudad} - {est.direccion}</small>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="sin-establecimientos">Sin establecimientos</span>
+                      )}
                     </td>
-                    <td>{admin.establecimiento?.direccion || '-'}</td>
-                    <td>{admin.establecimiento?.ciudad || '-'}</td>
                     <td>
                       <button
-                        className={`estado-toggle ${admin.estadoUsuario?.toLowerCase() || 'activo'}`}
+                        className={`estado-toggle ${admin.usuario?.estadoUsuario?.toLowerCase() || 'activo'}`}
                         onClick={() => cambiarEstado(admin)}
                       >
-                        {admin.estadoUsuario}
+                        {admin.usuario?.estadoUsuario}
                       </button>
                     </td>
-                    <td>{admin.fechaRegistro ? new Date(admin.fechaRegistro).toLocaleDateString('es-ES') : '-'}</td>
+                    <td>{admin.usuario?.fechaRegistro ? new Date(admin.usuario.fechaRegistro).toLocaleDateString('es-ES') : '-'}</td>
                     <td>
                       <div className="acciones-cell">
                         <button 
@@ -221,17 +236,17 @@ export default function AdminEstablecimientos() {
                 <>
                   <p className="modal-warning">Esta acción eliminará permanentemente:</p>
                   <div className="modal-info-box">
-                    <p><strong>Administrador:</strong> {adminSeleccionado.nombre}</p>
-                    <p><strong>Establecimiento:</strong> {adminSeleccionado.establecimiento}</p>
-                    <p><strong>Email:</strong> {adminSeleccionado.email}</p>
+                    <p><strong>Administrador:</strong> {adminSeleccionado.usuario?.nombre}</p>
+                    <p><strong>Establecimientos:</strong> {adminSeleccionado.establecimientos?.length || 0}</p>
+                    <p><strong>Email:</strong> {adminSeleccionado.usuario?.email}</p>
                   </div>
                   <p className="modal-warning">¿Está seguro de continuar?</p>
                 </>
               ) : (
                 <div className="modal-info-box">
                   <p>Funcionalidad de edición en desarrollo</p>
-                  <p><strong>Administrador:</strong> {adminSeleccionado.nombre}</p>
-                  <p><strong>Establecimiento:</strong> {adminSeleccionado.establecimiento}</p>
+                  <p><strong>Administrador:</strong> {adminSeleccionado.usuario?.nombre}</p>
+                  <p><strong>Establecimientos:</strong> {adminSeleccionado.establecimientos?.length || 0}</p>
                 </div>
               )}
             </div>

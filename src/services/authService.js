@@ -16,8 +16,9 @@ export const authService = {
                     estado: response.data.estadoUsuario // Backend usa 'estadoUsuario'
                 };
                 
-                // Verificar que el usuario esté activo
-                if (userData.estado !== 'ACTIVO') {
+                // Solo verificar estado activo para ADMINISTRADORES (propietarios de establecimientos)
+                // Los CLIENTES y SUPER_ADMINISTRADORES pueden acceder siempre
+                if (userData.estado !== 'ACTIVO' && userData.rol === 'ADMINISTRADOR') {
                     throw new Error('Tu cuenta está inactiva. Contacta al administrador.');
                 }
                 
@@ -138,7 +139,7 @@ export const authService = {
         if (!user) return false;
 
         // Rutas de SUPER_ADMINISTRADOR
-        const superAdminRoutes = ['dashboard-super-admin', 'admin-usuarios', 'admin-establecimientos'];
+        const superAdminRoutes = ['dashboard-super-admin', 'admin-usuarios', 'admin-establecimientos', 'estadisticas'];
         if (superAdminRoutes.some(r => route.includes(r))) {
             return user.rol === 'SUPER_ADMINISTRADOR';
         }

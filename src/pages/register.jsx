@@ -316,13 +316,40 @@ export default function Register() {
               </button>
             </div>
             <div className="modal-body">
-              <p>
-                <strong>Lorem ipsum dolor sit amet</strong>, consectetur
-                adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua...
+              <h3>Términos y Condiciones de GolReserve</h3>
+              <p>Al crear una cuenta en GolReserve, aceptas lo siguiente:</p>
+              
+              <ul style={{ textAlign: 'left', paddingLeft: '1.5rem', marginTop: '1rem' }}>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  Tus datos personales (nombre, correo, documento y teléfono) serán usados únicamente para gestionar tus reservas dentro de la plataforma.
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  La información sensible se protege con cifrado (ChaCha20-Poly1305), contraseñas encriptadas con BCrypt y autenticación mediante JWT.
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  Debes proporcionar información real y mantener la confidencialidad de tu contraseña.
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  No se permite el uso de la aplicación para generar reservas falsas, manipular el sistema o usarla con fines no autorizados.
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  GolReserve es un proyecto académico, por lo que puede presentar fallos o interrupciones ocasionales.
+                </li>
+                <li style={{ marginBottom: '0.75rem' }}>
+                  Puedes solicitar la eliminación de tu cuenta en cualquier momento.
+                </li>
+              </ul>
+
+              <p style={{ marginTop: '1.5rem', fontWeight: '600' }}>
+                Si no estás de acuerdo con estos términos, no podrás completar el registro.
               </p>
-              <p>
-                <strong>Fecha de última actualización:</strong> Octubre 2025
+              
+              <p style={{ marginTop: '1rem', color: '#4caf50', fontWeight: '600' }}>
+                Al continuar, confirmas que has leído y aceptas los Términos y Condiciones.
+              </p>
+              
+              <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#64748b' }}>
+                <strong>Fecha de última actualización:</strong> Noviembre 2025
               </p>
             </div>
             <div className="modal-footer">

@@ -73,7 +73,7 @@ export default function Profile() {
 
                         <div className="info-group">
                             <label>ID de Usuario</label>
-                            <p>{userData.idUsuario}</p>
+                            <p>{userData.id}</p>
                         </div>
                     </div>
 

@@ -60,6 +60,12 @@
   width: 20px;
   height: 20px;
   color: #94a3b8;
+  transition: opacity 0.2s ease;
+}
+
+.search-icon.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .search-input {
@@ -177,6 +183,39 @@
 .establecimiento-cell strong {
   color: #4caf50;
   font-weight: 600;
+}
+
+/* Lista de establecimientos */
+.establecimientos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.establecimiento-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(76, 175, 80, 0.05);
+  border-left: 3px solid #4caf50;
+  border-radius: 6px;
+}
+
+.establecimiento-item strong {
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.establecimiento-item small {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.sin-establecimientos {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 0.9rem;
 }
 
 /* Toggle estado */

@@ -4,6 +4,9 @@ import { authService } from '../services/authService';
 
 export default function Navbar({ currentPage = 'home' }) {
     const isAuthenticated = authService.isAuthenticated();
+    const currentUser = authService.getCurrentUser();
+    const isSuperAdmin = currentUser?.rol === 'SUPER_ADMINISTRADOR';
+    
     return (
         <header className="header">
             <div className="logo-container">
@@ -30,6 +33,14 @@ export default function Navbar({ currentPage = 'home' }) {
             <div className="nav-actions">
                 {isAuthenticated ? (
                     <>
+                        {isSuperAdmin && (
+                            <a 
+                                href="#dashboard-super-admin"
+                                className={`nav-link ${currentPage === 'dashboard-super-admin' ? 'active' : ''}`}
+                            >
+                                Dashboard Admin
+                            </a>
+                        )}
                         <a 
                             href="#mis-reservas"
                             className={`nav-link ${currentPage === 'mis-reservas' ? 'active' : ''}`}

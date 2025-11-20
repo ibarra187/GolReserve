@@ -107,7 +107,7 @@ export default function DashboardSuperAdmin() {
             </a>
 
             {/* Card de Estadísticas */}
-            <div className="dashboard-card card-estadisticas">
+            <a href="#estadisticas" className="dashboard-card card-estadisticas">
               <div className="card-icon">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -116,20 +116,22 @@ export default function DashboardSuperAdmin() {
               <div className="card-content">
                 <h2 className="card-title">Estadísticas del Sistema</h2>
                 <p className="card-description">
-                  Visualiza métricas y estadísticas generales del sistema
+                  Visualiza métricas detalladas y análisis completo de la plataforma. 
+                  Monitorea el rendimiento y crecimiento del sistema.
                 </p>
-                <div className="stats-grid">
-                  <div className="stat-mini">
-                    <span className="stat-mini-value">{estadisticas.totalReservas || 0}</span>
-                    <span className="stat-mini-label">Reservas Totales</span>
-                  </div>
-                  <div className="stat-mini">
-                    <span className="stat-mini-value">${estadisticas.ingresosTotales ? (estadisticas.ingresosTotales / 1000000).toFixed(1) : 0}M</span>
-                    <span className="stat-mini-label">Ingresos Totales</span>
+                <div className="card-stats">
+                  <div className="stat">
+                    <span className="stat-number">{estadisticas.totalReservas || 0}</span>
+                    <span className="stat-label">Reservas Totales</span>
                   </div>
                 </div>
               </div>
-            </div>
+              <div className="card-arrow">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>
 
             {/* Card de Configuración */}
             <div className="dashboard-card card-configuracion">
