@@ -31,6 +31,12 @@ export default function Navbar({ currentPage = 'home' }) {
                 {isAuthenticated ? (
                     <>
                         <a 
+                            href="#mis-reservas"
+                            className={`nav-link ${currentPage === 'mis-reservas' ? 'active' : ''}`}
+                        >
+                            Mis Reservas
+                        </a>
+                        <a 
                             href="#profile"
                             className={`nav-link ${currentPage === 'profile' ? 'active' : ''}`}
                         >
